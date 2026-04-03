@@ -10,10 +10,13 @@ SQLAlchemy==2.0.34
 Flask-Login==0.6.3
 Flask-Cors==4.0.0
 
-# Production Server
+# Production Server (Essencial para o Render)
 gunicorn==21.2.0
 
-# Utilitários de sistema (Dependências necessárias para Werkzeug/Flask)
+# Utilitários de sistema
 itsdangerous==2.1.2
 click==8.1.7
 Blinker==1.7.0
+
+# Recomendado para validação de campos de e-mail no registro
+email-validator==2.1.1
