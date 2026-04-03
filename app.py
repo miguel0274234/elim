@@ -368,23 +368,39 @@ def api_atualizar_perfil():
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
 
-# --- SETUP INICIAL ---
+# --- SETUP INICIAL (CORRIGIDO E LIMPO) ---
 
-
-def setup():
+def setup_initial_data():
+    # Cria todas as tabelas
     db.create_all()
 
+    # Cria unidade padrão se não existir
     if not Unidade.query.first():
-        db.session.add(Unidade(nome="Campus Central", cidade="SP"))
+        unidade = Unidade(nome="Campus Central", cidade="Luanda")
+        db.session.add(unidade)
         db.session.commit()
+        print(">>> [SISTEMA] Unidade padrão criada")
 
-     if not User.query.filter_by(role="admin").first():
-            admin = User(name="Gestor Quantum", email="master@elim.edu", role="admin", is_approved=True, unidade_id=1)
-            admin.set_password("elim@2026")
-            db.session.add(admin)
-            db.session.commit()
-            print(">>> [SISTEMA] Admin Master configurado: master@elim.edu / elim@2026")
+    # Cria admin master se não existir
+    if not User.query.filter_by(email="master@elim.edu").first():
+        admin = User(
+            name="Gestor Quantum",
+            email="master@elim.edu",
+            role="admin",
+            is_approved=True,
+            unidade_id=1
+        )
+        admin.set_password("elim@2026")
+        db.session.add(admin)
+        db.session.commit()
+        print(">>> [SISTEMA] Admin criado: master@elim.edu / elim@2026")
+
+
+# 👇 ISSO GARANTE QUE RODA NO RENDER
 with app.app_context():
-    setup()
+    setup_initial_data()
+
+
+# --- RUN LOCAL ---
 if __name__ == "__main__":
     app.run(debug=True)
