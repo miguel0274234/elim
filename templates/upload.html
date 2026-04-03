@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>ITEL ELIM | Gerenciador de Conteúdo Ultra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --accent-blue: #38bdf8;
+            --accent-gold: #fbbf24;
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius-lg: 24px;
+            --radius-md: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(251, 191, 36, 0.05) 0%, transparent 40%);
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; font-weight: 800; font-size: 1.1rem; }
+        .logo i { color: var(--accent-blue); font-size: 1.4rem; }
+
+        .stepper-container { max-width: 600px; margin: 30px auto; padding: 0 20px; }
+        .stepper { display: flex; justify-content: space-between; position: relative; align-items: center; }
+        .step-line { position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 100%; height: 2px; background: var(--glass-border); z-index: 1; }
+        .step-progress { position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 0%; height: 2px; background: var(--accent-blue); z-index: 2; transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
+        
+        .step-node {
+            width: 38px; height: 38px; border-radius: 12px; background: var(--bg-deep);
+            border: 2px solid var(--glass-border); display: flex; align-items: center; justify-content: center;
+            font-weight: 800; z-index: 3; transition: 0.4s; color: var(--text-dim); position: relative;
+        }
+        .step-node.active { border-color: var(--accent-blue); color: var(--accent-blue); transform: scale(1.15); background: rgba(56, 189, 248, 0.1); }
+        .step-node.done { background: var(--accent-blue); border-color: var(--accent-blue); color: var(--bg-deep); }
+
+        .form-card {
+            max-width: 850px; margin: 0 auto 60px; background: var(--glass-bg);
+            border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
+            padding: 40px; backdrop-filter: blur(20px); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6);
+        }
+
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: slideIn 0.4s ease-out forwards; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(15px); } to { opacity: 1; transform: translateX(0); } }
+
+        .form-header h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .form-header p { color: var(--text-dim); margin-bottom: 35px; font-size: 0.95rem; }
+
+        .field { margin-bottom: 22px; position: relative; }
+        .field label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 8px; letter-spacing: 0.5px; opacity: 0.8; }
+        .field input, .field textarea, .field select {
+            width: 100%; padding: 14px 18px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md); color: #fff; font-size: 0.95rem; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .field input:focus, .field textarea:focus { border-color: var(--accent-blue); box-shadow: 0 0 15px rgba(56, 189, 248, 0.1); }
+
+        /* Preview Video Style */
+        .video-preview-box {
+            margin-top: 10px; border-radius: var(--radius-md); overflow: hidden; background: #000;
+            aspect-ratio: 16/9; display: none; border: 1px solid var(--glass-border);
+        }
+
+        .quiz-item {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md); padding: 25px; margin-bottom: 25px; position: relative;
+            transition: 0.3s;
+        }
+        .quiz-item:hover { border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); }
+        
+        .remove-question { position: absolute; top: -10px; right: -10px; width: 30px; height: 30px; 
+            background: var(--danger); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; cursor: pointer; font-size: 0.8rem; box-shadow: 0 5px 10px rgba(0,0,0,0.3); transition: 0.3s;
+        }
+        .remove-question:hover { transform: scale(1.1) rotate(90deg); }
+
+        .option-input-wrapper { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
+        .radio-custom {
+            min-width: 28px; height: 28px; border: 2px solid var(--glass-border);
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; color: transparent;
+        }
+        .radio-custom.selected { border-color: var(--success); background: var(--success); color: var(--bg-deep); }
+
+        .btn-add-q {
+            width: 100%; padding: 18px; background: rgba(56, 189, 248, 0.05); border: 1px dashed var(--accent-blue);
+            border-radius: var(--radius-md); color: var(--accent-blue); cursor: pointer; font-weight: 700; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-add-q:hover { background: rgba(56, 189, 248, 0.1); transform: translateY(-2px); }
+
+        .nav-actions { display: flex; justify-content: space-between; margin-top: 40px; }
+        .btn { padding: 14px 28px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+        
+        .btn-ghost { background: transparent; color: var(--text-dim); }
+        .btn-ghost:hover { color: #fff; }
+        
+        .btn-blue { background: var(--accent-blue); color: var(--bg-deep); }
+        .btn-blue:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .btn-success { background: var(--success); color: var(--bg-deep); }
+
+        .hidden { display: none !important; }
+        .error-input { border-color: var(--danger) !important; }
+
+        @media (max-width: 600px) {
+            .form-card { padding: 25px; }
+            .nav-actions { flex-direction: column-reverse; gap: 15px; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo">
+            <i class="fa-solid fa-bolt"></i>
+            ITEL ELIM <span style="opacity: 0.5; font-weight: 300; margin-left: 5px;">| CMS</span>
+        </a>
+        <a href="/aulas" class="btn-ghost" style="text-decoration: none;">
+            <i class="fa-solid fa-xmark"></i> Sair
+        </a>
+    </header>
+
+    <div class="stepper-container">
+        <div class="stepper">
+            <div class="step-line"></div>
+            <div class="step-progress" id="stepProgress"></div>
+            <div class="step-node active" data-step="1">1</div>
+            <div class="step-node" data-step="2">2</div>
+            <div class="step-node" data-step="3">3</div>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <form id="aulaForm">
+            <div class="step-content active" id="step1">
+                <div class="form-header">
+                    <h2>Essência do Conteúdo</h2>
+                    <p>Insira as informações base para identificação da aula.</p>
+                </div>
+                <div class="field">
+                    <label>Título da Aula</label>
+                    <input type="text" name="nome" placeholder="Título impactante..." required>
+                </div>
+                <div class="field">
+                    <label>URL do Vídeo (YouTube)</label>
+                    <input type="url" id="videoUrl" name="url_video" placeholder="https://www.youtube.com/watch?v=..." required>
+                    <div id="videoPreview" class="video-preview-box"></div>
+                </div>
+                <div class="field">
+                    <label>Resumo Teórico</label>
+                    <textarea name="descricao" rows="4" placeholder="O que o aluno aprenderá?" required></textarea>
+                </div>
+            </div>
+
+            <div class="step-content" id="step2">
+                <div class="form-header">
+                    <h2>Metrificação</h2>
+                    <p>Configure categorias e o sistema de gamificação.</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="field">
+                        <label>Categoria</label>
+                        <select name="categoria">
+                            <option value="Teologia">Teologia</option>
+                            <option value="Liderança">Liderança</option>
+                            <option value="História">História</option>
+                            <option value="Missões">Missões</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Ganho de XP</label>
+                        <input type="number" name="xp" value="100" min="10">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Tempo Estimado (min)</label>
+                    <input type="number" name="tempo" value="30" min="1">
+                </div>
+            </div>
+
+            <div class="step-content" id="step3">
+                <div class="form-header">
+                    <h2>Desafio de Verificação</h2>
+                    <p>Adicione questões para validar o aprendizado do aluno.</p>
+                </div>
+                <div id="quizContainer"></div>
+                <button type="button" class="btn-add-q" onclick="addQuestion()">
+                    <i class="fa-solid fa-plus"></i> Adicionar Questão
+                </button>
+            </div>
+
+            <div class="nav-actions">
+                <button type="button" class="btn btn-ghost hidden" id="prevBtn" onclick="changeStep(-1)">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar
+                </button>
+                <div style="flex: 1"></div>
+                <button type="button" class="btn btn-blue" id="nextBtn" onclick="changeStep(1)">
+                    Próximo Passo <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                <button type="submit" class="btn btn-success hidden" id="submitBtn">
+                    <i class="fa-solid fa-check-double"></i> Finalizar e Publicar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        // Utilitário para extrair ID do Youtube
+        function getYoutubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Preview do Vídeo Automático
+        document.getElementById('videoUrl').addEventListener('input', function(e) {
+            const id = getYoutubeId(e.target.value);
+            const preview = document.getElementById('videoPreview');
+            if (id) {
+                preview.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        function changeStep(delta) {
+            if (delta > 0 && !validateStep()) return;
+            
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            currentStep += delta;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            updateUI();
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.step-node').forEach(node => {
+                const s = parseInt(node.dataset.step);
+                node.classList.toggle('active', s === currentStep);
+                node.classList.toggle('done', s < currentStep);
+            });
+
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('stepProgress').style.width = `${progress}%`;
+
+            document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
+            document.getElementById('nextBtn').classList.toggle('hidden', currentStep === totalSteps);
+            document.getElementById('submitBtn').classList.toggle('hidden', currentStep !== totalSteps);
+        }
+
+        function validateStep() {
+            const container = document.getElementById(`step${currentStep}`);
+            const inputs = container.querySelectorAll('[required]');
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('error-input');
+                    valid = false;
+                } else {
+                    input.classList.remove('error-input');
+                }
+            });
+
+            if (!valid) {
+                Swal.fire({ icon: 'error', title: 'Campos Vazios', text: 'Por favor, preencha todos os campos obrigatórios.' });
+            }
+            return valid;
+        }
+
+        function addQuestion() {
+            const id = Date.now();
+            const html = `
+                <div class="quiz-item" id="q_${id}">
+                    <div class="remove-question" onclick="removeQuestion('${id}')"><i class="fa-solid fa-times"></i></div>
+                    <div class="field">
+                        <label>Enunciado da Questão</label>
+                        <input type="text" class="question-text" placeholder="Digite a pergunta..." required>
+                    </div>
+                    <div class="options-grid">
+                        ${[0,1,2,3].map(i => `
+                            <div class="option-input-wrapper">
+                                <div class="radio-custom ${i === 0 ? 'selected' : ''}" onclick="selectCorrect(this, ${i})">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <input type="text" class="opt-text" placeholder="Opção ${i+1}" required>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <input type="hidden" class="correct-idx" value="0">
+                </div>
+            `;
+            document.getElementById('quizContainer').insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeQuestion(id) {
+            document.getElementById(`q_${id}`).remove();
+        }
+
+        function selectCorrect(el, idx) {
+            const parent = el.closest('.quiz-item');
+            parent.querySelectorAll('.radio-custom').forEach(r => r.classList.remove('selected'));
+            el.classList.add('selected');
+            parent.querySelector('.correct-idx').value = idx;
+        }
+
+        document.getElementById('aulaForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const questions = document.querySelectorAll('.quiz-item');
+            
+            if (questions.length === 0) {
+                Swal.fire('Ops!', 'Adicione pelo menos uma questão ao quiz.', 'warning');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Publicando...';
+
+            const formData = new FormData(this);
+            const payload = {
+                nome: formData.get('nome'),
+                url_video: formData.get('url_video'),
+                descricao: formData.get('descricao'),
+                categoria: formData.get('categoria'),
+                xp: parseInt(formData.get('xp')),
+                tempo: parseInt(formData.get('tempo')),
+                quiz: []
+            };
+
+            questions.forEach(item => {
+                payload.quiz.push({
+                    pergunta: item.querySelector('.question-text').value,
+                    opcoes: Array.from(item.querySelectorAll('.opt-text')).map(o => o.value),
+                    correta: parseInt(item.querySelector('.correct-idx').value)
+                });
+            });
+
+            try {
+                const response = await fetch('/api/aulas/cadastrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const res = await response.json();
+                if (res.success) {
+                    Swal.fire({ icon: 'success', title: 'Excelente!', text: res.message, showConfirmButton: false, timer: 2000 })
+                    .then(() => window.location.href = res.redirect);
+                } else {
+                    Swal.fire('Erro no Cadastro', res.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Falha na Rede', 'Não foi possível conectar ao servidor.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-check-double"></i> Finalizar e Publicar';
+            }
+        };
+
+        // Inicia com uma questão por padrão
+        window.onload = () => { addQuestion(); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>ITEL - ELIM | Portal de Ensino Elite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --bg-card: rgba(15, 23, 42, 0.6);
+            --azul-claro: #38bdf8;
+            --amarelo-elim: #e2f30d;
+            --texto-prio: #f8fafc;
+            --texto-sec: #94a3b8;
+            --borda: rgba(255, 255, 255, 0.06);
+            --glow: rgba(56, 189, 248, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--texto-sec);
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(226, 243, 13, 0.03) 0%, transparent 40%);
+            min-height: 100vh;
+        }
+
+        /* Scrollbar Custom */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--borda);
+            position: sticky;
+            top: 0; z-index: 1000;
+        }
+
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { height: 32px; transition: transform 0.3s ease; }
+        .logo-container:hover .logo-img { transform: rotate(-10deg) scale(1.1); }
+        .brand-text {
+            font-weight: 700; color: #fff; font-size: 1rem; 
+            letter-spacing: -0.5px;
+        }
+
+        /* Profile Area */
+        .user-actions { display: flex; align-items: center; gap: 20px; }
+        
+        .btn-icon {
+            color: var(--texto-sec); text-decoration: none; font-size: 1.1rem;
+            position: relative; transition: 0.3s;
+        }
+        .btn-icon:hover { color: #fff; }
+
+        .profile-wrapper { position: relative; }
+        .profile-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(45deg, var(--azul-claro), var(--amarelo-elim));
+            display: flex; align-items: center; justify-content: center;
+            color: var(--bg-deep); font-weight: 800; cursor: pointer;
+            border: 3px solid #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .dropdown {
+            position: absolute; top: 55px; right: 0; width: 260px;
+            background: #0f172a; border: 1px solid var(--borda);
+            border-radius: 20px; padding: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            opacity: 0; transform: translateY(10px); pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dropdown.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+        .dropdown-info { padding: 10px 15px 15px; border-bottom: 1px solid var(--borda); margin-bottom: 8px; }
+        .dropdown-info p { color: #fff; font-weight: 700; font-size: 0.9rem; }
+        .dropdown-info span { font-size: 0.7rem; color: var(--azul-claro); text-transform: uppercase; font-weight: 700; }
+
+        .dropdown-link {
+            display: flex; align-items: center; gap: 12px; padding: 10px 15px;
+            color: var(--texto-sec); text-decoration: none; font-size: 0.85rem;
+            font-weight: 600; border-radius: 12px; transition: 0.2s;
+        }
+        .dropdown-link:hover { background: rgba(255,255,255,0.05); color: var(--amarelo-elim); }
+        .dropdown-link.logout { color: #f87171; margin-top: 5px; }
+
+        /* Hero */
+        .hero { padding: 80px 8% 60px; text-align: center; }
+        .badge {
+            background: rgba(56, 189, 248, 0.05); color: var(--azul-claro);
+            padding: 6px 16px; border-radius: 100px; font-size: 0.7rem;
+            font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.1);
+            margin-bottom: 24px; display: inline-block;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; color: #fff;
+            letter-spacing: -2px; line-height: 1.1; margin-bottom: 20px;
+        }
+        .hero h1 span { color: var(--azul-claro); }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px; padding-bottom: 100px;
+        }
+
+        .bento-card {
+            background: var(--bg-card); border: 1px solid var(--borda);
+            border-radius: 32px; padding: 32px; text-decoration: none;
+            position: relative; overflow: hidden; display: flex; flex-direction: column;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-8px); border-color: rgba(56, 189, 248, 0.3);
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        .category-tag {
+            font-size: 0.65rem; font-weight: 800; color: var(--amarelo-elim);
+            background: rgba(226, 243, 13, 0.1); padding: 4px 12px;
+            border-radius: 8px; width: fit-content; margin-bottom: 20px;
+        }
+
+        .bento-card h3 { color: #fff; font-size: 1.25rem; margin-bottom: 12px; font-weight: 700; }
+        .bento-card p { font-size: 0.9rem; color: var(--texto-sec); line-height: 1.5; }
+
+        .card-footer {
+            margin-top: auto; padding-top: 25px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .go-btn {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: #1e293b; color: #fff; display: flex;
+            align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .bento-card:hover .go-btn { background: var(--azul-claro); color: var(--bg-deep); transform: rotate(-45deg); }
+
+        /* Floating Animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 5%; }
+            .hero { padding: 60px 5%; }
+            .brand-text { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="{{ url_for('dashboard') }}" class="logo-container">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" class="logo-img" alt="ELIM">
+            <span class="brand-text">Portal Ocean</span>
+        </a>
+
+        <div class="user-actions">
+            <a href="{{ url_for('lista_aulas') }}" class="btn-icon" title="Explorar">
+                <i class="fa-solid fa-layer-group"></i>
+            </a>
+            
+            <div class="profile-wrapper">
+                <div class="profile-btn" id="profileTrigger">
+                    {{ current_user.name[0] | upper if current_user.is_authenticated else '?' }}
+                </div>
+                
+                <div class="dropdown" id="profileMenu">
+                    <div class="dropdown-info">
+                        <p>{{ current_user.name }}</p>
+                        <span>{{ current_user.role }}</span>
+                    </div>
+                    
+                    <a href="{{ url_for('perfil') }}" class="dropdown-link">
+                        <i class="fa-solid fa-circle-user"></i> Meu Perfil
+                    </a>
+                    
+                    {% if current_user.role in ['admin', 'professor'] %}
+                    <a href="{{ url_for('upload') }}" class="dropdown-link">
+                        <i class="fa-solid fa-plus"></i> Publicar Aula
+                    </a>
+                    {% endif %}
+
+                    {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('gerenciar_usuarios') }}" class="dropdown-link">
+                        <i class="fa-solid fa-shield-halved"></i> Painel Admin
+                    </a>
+                    {% endif %}
+
+                    <a href="{{ url_for('logout') }}" class="dropdown-link logout">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair da Conta
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="max-width: 1400px; margin: 0 auto; padding: 0 5%;">
+        <section class="hero animate-in">
+            <span class="badge">V8 QUANTUM CORE</span>
+            <h1>Acelere sua <span>Evolução</span> Profissional.</h1>
+            <p style="max-width: 600px; margin: 0 auto 40px; color: var(--texto-sec);">
+                Acesso exclusivo aos módulos de treinamento de elite. Gerencie seu progresso e domine novas tecnologias com o ITEL.
+            </p>
+        </section>
+
+        <div class="bento-grid animate-in" style="animation-delay: 0.2s;">
+            {% if aulas %}
+                {% for aula in aulas %}
+                <a href="{{ url_for('ver_aula', slug=aula.slug) }}" class="bento-card">
+                    <span class="category-tag">{{ aula.categoria }}</span>
+                    <h3>{{ aula.titulo }}</h3>
+                    <p>{{ aula.descricao[:90] }}...</p>
+                    
+                    <div class="card-footer">
+                        <span style="font-size: 0.7rem; font-weight: 700; color: #fff; letter-spacing: 1px;">ACESSAR CONTEÚDO</span>
+                        <div class="go-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div style="grid-column: 1/-1; text-align: center; padding: 80px; background: var(--bg-card); border-radius: 32px; border: 1px dashed var(--borda);">
+                    <i class="fa-solid fa-ghost" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                    <p>O oceano está calmo por enquanto. Nenhuma aula encontrada.</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        // Lógica de Dropdown Robusta
+        const trigger = document.getElementById('profileTrigger');
+        const menu = document.getElementById('profileMenu');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.toggle('active');
+        });
+
+        // Fecha ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        // Atalho de Teclado (Esc) para fechar menu
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') menu.classList.remove('active');
+        });
+
+        // Efeito de Entrada das Cards (Stagger)
+        document.querySelectorAll('.bento-card').forEach((card, index) => {
+            card.style.animationDelay = `${0.1 * index}s`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Aprovações Pendentes | Ocean</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { background-color: #0f172a; color: white; }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="p-8">
+
+<div class="max-w-5xl mx-auto">
+    <header class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-indigo-400">Solicitações de Acesso</h1>
+            <p class="text-slate-400">Usuários aguardando aprovação para o portal.</p>
+        </div>
+        <span class="bg-indigo-500/20 text-indigo-300 px-4 py-2 rounded-full border border-indigo-500/30">
+            <span id="counter">{{ pedidos|length }}</span> Pendentes
+        </span>
+    </header>
+
+    <div class="glass-card rounded-2xl overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-800/50 text-slate-300 uppercase text-xs font-semibold tracking-wider">
+                    <th class="p-4">Usuário</th>
+                    <th class="p-4">E-mail</th>
+                    <th class="p-4">Data</th>
+                    <th class="p-4 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="request-table-body">
+                {% for user in pedidos %}
+                <tr id="user-row-{{ user.id }}" class="request-row border-b border-slate-700/50 hover:bg-slate-700/20 transition-all">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center font-bold text-sm">
+                                {{ user.name[:2]|upper }}
+                            </div>
+                            <span class="font-medium">{{ user.name }}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-slate-400 text-sm">{{ user.email }}</td>
+                    <td class="p-4 text-slate-400 text-sm">{{ user.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="aprovarUsuario('{{ user.id }}', '{{ user.name }}')" 
+                                class="btn-approve bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-emerald-500/20">
+                            APROVAR
+                        </button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr id="empty-state">
+                    <td colspan="4" class="p-12 text-center text-slate-500">
+                        <i class="fas fa-check-circle text-4xl mb-3 block opacity-20"></i>
+                        Não há solicitações pendentes no momento.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    async function aprovarUsuario(userId, userName) {
+        const { isConfirmed } = await Swal.fire({
+            title: 'Confirmar Acesso',
+            text: `Deseja ativar a conta de ${userName}?`,
+            icon: 'question',
+            showCancelButton: true,
+            background: '#1e293b',
+            color: '#fff',
+            confirmButtonColor: '#10b981', // Emerald 500
+            cancelButtonColor: '#334155',
+            confirmButtonText: 'Sim, aprovar',
+            cancelButtonText: 'Agora não',
+            customClass: {
+                popup: 'rounded-2xl border border-white/10'
+            }
+        });
+
+        if (isConfirmed) {
+            const btn = document.querySelector(`#user-row-${userId} .btn-approve`);
+            const originalContent = btn.innerHTML;
+            
+            // Estado de carregamento
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                // Chamada para a API que definimos no Python
+                const response = await fetch(`/api/admin/aprovar/${userId}`, { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const result = await response.json();
+
+                if (result.success) {
+                    const row = document.getElementById(`user-row-${userId}`);
+                    
+                    // Animação de saída
+                    row.style.transition = '0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(50px)';
+                    
+                    setTimeout(() => {
+                        row.remove();
+                        atualizarContador();
+                        
+                        // Se não houver mais linhas, recarrega para mostrar o estado vazio
+                        if (document.querySelectorAll('.request-row').length === 0) {
+                            location.reload();
+                        }
+                    }, 600);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Aprovado!',
+                        text: `${userName} agora tem acesso ao portal.`,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        background: '#064e3b',
+                        color: '#fff'
+                    });
+                } else {
+                    throw new Error(result.message || 'Erro ao aprovar');
+                }
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Falha no servidor',
+                    text: e.message,
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    }
+
+    function atualizarContador() {
+        const countSpan = document.getElementById('counter');
+        const currentCount = document.querySelectorAll('.request-row').length;
+        countSpan.innerText = currentCount;
+    }
+</script>
+
+</body>
+</html>

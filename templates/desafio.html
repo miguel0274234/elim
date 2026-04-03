@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio: {{ aula.titulo }} | ELIM V8</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --secondary: #10b981;
+            --bg: #020617;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top right, #1e293b, #020617);
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 12px;
+            color: #cbd5e1;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .option-btn.selected {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+            font-weight: bold;
+        }
+
+        .quiz-footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-next {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Tela de Resultado */
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid var(--secondary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+        }
+
+        .xp-badge {
+            background: #fbbf24;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quiz-screen">
+        <div class="quiz-header">
+            <div class="progress-bar"><div id="progress-fill"></div></div>
+            <p id="question-counter" style="color: var(--primary); font-weight: bold;">Questão 1 de 5</p>
+        </div>
+
+        <div class="question-card">
+            <h2 id="question-text">Carregando pergunta...</h2>
+            <div class="options-grid" id="options-container">
+                </div>
+        </div>
+
+        <div class="quiz-footer">
+            <span id="timer" style="color: #64748b;"><i class="fa-regular fa-clock"></i> Desafio Ativo</span>
+            <button class="btn-next" id="next-btn" disabled onclick="nextQuestion()">Próxima <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <div class="score-circle">
+            <span id="final-score" style="font-size: 2rem; font-weight: bold;">0</span>
+            <span style="font-size: 0.8rem;">ACERTOS</span>
+        </div>
+        <h1 id="result-title">Incrível!</h1>
+        <p id="result-msg">Você concluiu o desafio com sucesso.</p>
+        <div class="xp-badge"><i class="fa-solid fa-bolt"></i> +<span id="xp-gain">0</span> XP Adicionado</div>
+        <br><br>
+        <a href="{{ url_for('lista_aulas') }}" class="btn-next" style="text-decoration: none;">Voltar para Aulas</a>
+    </div>
+</div>
+
+<script>
+    // Dados injetados pelo Flask
+    const quizData = {{ aula.quiz_data | tojson }};
+    const aulaId = {{ aula.id }};
+    const xpBase = {{ aula.xp_recompensa }};
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedAnswer = null;
+
+    function loadQuestion() {
+        selectedAnswer = null;
+        document.getElementById('next-btn').disabled = true;
+        
+        const q = quizData[currentQuestion];
+        document.getElementById('question-text').innerText = q.pergunta;
+        document.getElementById('question-counter').innerText = `Questão ${currentQuestion + 1} de ${quizData.length}`;
+        
+        const progress = ((currentQuestion) / quizData.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        q.opcoes.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(index, btn) {
+        selectedAnswer = index;
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextQuestion() {
+        if (selectedAnswer === quizData[currentQuestion].correta) {
+            score++;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+            loadQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    async function finishQuiz() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        
+        const finalScorePercent = (score / quizData.length) * 100;
+        document.getElementById('final-score').innerText = `${score}/${quizData.length}`;
+        document.getElementById('xp-gain').innerText = xpBase;
+
+        // Enviar resultado para o Servidor (Rota que criamos no app.py)
+        try {
+            const response = await fetch('/api/aulas/concluir', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    aula_id: aulaId,
+                    nota: finalScorePercent
+                })
+            });
+            const result = await response.json();
+            console.log("Progresso salvo. Novo XP:", result.new_xp);
+        } catch (error) {
+            console.error("Erro ao salvar progresso:", error);
+        }
+    }
+
+    // Iniciar
+    loadQuestion();
+</script>
+
+</body>
+</html>

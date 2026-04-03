@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil | Portal Ocean Elite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root {
+            --bg-body: #020617;
+            --accent-blue: #38bdf8;
+            --accent-gold: #fbbf24;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-prio: #f8fafc;
+            --text-sec: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 50%);
+            color: var(--text-prio);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+        }
+
+        .btn-back {
+            text-decoration: none;
+            color: var(--text-sec);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+        .btn-back:hover { background: rgba(255, 255, 255, 0.08); color: #fff; transform: translateX(-3px); }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .profile-card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            animation: cardEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* Avatar & Role */
+        .avatar-section {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: -110px auto 25px;
+        }
+
+        .avatar-glow {
+            position: absolute;
+            inset: -8px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-gold));
+            border-radius: 50%;
+            filter: blur(15px);
+            opacity: 0.4;
+            animation: rotateGlow 6s linear infinite;
+        }
+
+        .avatar-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            border: 4px solid #020617;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .role-tag {
+            position: absolute;
+            bottom: 5px;
+            right: 0;
+            background: var(--accent-blue);
+            color: #020617;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+        }
+        .role-admin { background: var(--accent-gold); }
+
+        .profile-header { text-align: center; margin-bottom: 30px; }
+        .profile-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .profile-header p { color: var(--accent-blue); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 18px;
+            text-align: center;
+        }
+        .stat-value { display: block; font-size: 1.1rem; font-weight: 800; color: var(--accent-blue); }
+        .stat-label { font-size: 0.6rem; color: var(--text-sec); text-transform: uppercase; font-weight: 700; }
+
+        /* Info Stack */
+        .info-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+
+        .info-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 16px 20px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .info-pill:hover { background: rgba(255, 255, 255, 0.07); border-color: var(--accent-blue); transform: scale(1.02); }
+
+        .info-pill i { color: var(--accent-blue); font-size: 1.2rem; }
+        .info-pill .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; font-weight: 800; }
+        .info-pill .value { font-size: 0.9rem; color: #fff; font-weight: 500; }
+
+        /* Actions */
+        .action-group { display: flex; flex-direction: column; gap: 12px; }
+
+        .btn-modern {
+            width: 100%;
+            padding: 16px;
+            border-radius: 22px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: 0.4s;
+        }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--accent-blue), #2563eb); 
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.5); }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+        }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .btn-danger {
+            background: transparent;
+            color: #f87171;
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+        .btn-danger:hover { color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+
+        /* Animations */
+        @keyframes cardEntrance { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        @media (max-width: 480px) {
+            .profile-card { padding: 35px 20px; }
+            .avatar-section { width: 120px; height: 120px; margin-top: -90px; }
+        }
+
+        /* Swall Custom Dark */
+        .swal2-popup { border-radius: 30px !important; background: #0f172a !important; color: #fff !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+        .swal2-input { border-radius: 15px !important; background: #1e293b !important; border: 1px solid #334155 !important; color: #fff !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="{{ url_for('dashboard') }}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+        </a>
+        <div style="font-weight: 800; font-size: 0.8rem; color: var(--accent-blue); letter-spacing: 2px;">OCEAN ELITE</div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="profile-card">
+            
+            <div class="avatar-section">
+                <div class="avatar-glow"></div>
+                <div class="avatar-inner">
+                    {% if user.role == 'admin' %}
+                        <i class="fa-solid fa-shield-halved" style="color: var(--accent-gold);"></i>
+                    {% else %}
+                        <i class="fa-solid fa-user-astronaut" style="color: var(--accent-blue);"></i>
+                    {% endif %}
+                </div>
+                <span class="role-tag {% if user.role == 'admin' %}role-admin{% endif %}">
+                    {{ user.role }}
+                </span>
+            </div>
+
+            <div class="profile-header">
+                <h1 id="display-name">{{ user.name }}</h1>
+                <p>Nível {{ (user.xp / 1000)|int + 1 }} • Status Ativo</p>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value">{{ user.xp }}</span>
+                    <span class="stat-label">Total XP</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">#{{ user.id }}</span>
+                    <span class="stat-label">ID Global</span>
+                </div>
+            </div>
+
+            <div class="info-stack">
+                <div class="info-pill">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                    <div>
+                        <span class="label">Identidade Acadêmica</span>
+                        <span class="value">{{ user.email }}</span>
+                    </div>
+                </div>
+
+                <div class="info-pill">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <div>
+                        <span class="label">Unidade de Operação</span>
+                        <span class="value">{{ user.unidade_rel.nome if user.unidade_rel else 'Não Vinculado' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-group">
+                <button onclick="abrirModalEdicao()" class="btn-modern btn-primary">
+                    <i class="fa-solid fa-user-gear"></i> Editar Perfil
+                </button>
+
+                {% if user.role == 'admin' %}
+                <a href="{{ url_for('lista_aprovacoes') }}" class="btn-modern btn-secondary" style="border-color: var(--accent-gold); color: var(--accent-gold);">
+                    <i class="fa-solid fa-fingerprint"></i> Gestão de Acessos
+                </a>
+                {% endif %}
+                
+                <a href="/logout" class="btn-modern btn-danger">
+                    <i class="fa-solid fa-door-open"></i> Finalizar Sessão
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function abrirModalEdicao() {
+            const { value: formValues } = await Swal.fire({
+                title: 'Ajustes de Perfil',
+                background: '#0f172a',
+                color: '#fff',
+                html:
+                    `<input id="swal-name" class="swal2-input" placeholder="Nome Completo" value="{{ user.name }}">` +
+                    `<input id="swal-email" class="swal2-input" placeholder="Novo E-mail" value="{{ user.email }}">` +
+                    `<input id="swal-pass" type="password" class="swal2-input" placeholder="Nova Senha (opcional)">` +
+                    `<input id="swal-curr-pass" type="password" class="swal2-input" placeholder="Senha Atual (obrigatório)">`,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'Salvar Alterações',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#38bdf8',
+                preConfirm: () => {
+                    return {
+                        name: document.getElementById('swal-name').value,
+                        email: document.getElementById('swal-email').value,
+                        new_password: document.getElementById('swal-pass').value,
+                        current_password: document.getElementById('swal-curr-pass').value
+                    }
+                }
+            });
+
+            if (formValues) {
+                if (!formValues.current_password) {
+                    Swal.fire('Erro', 'Senha atual é necessária para salvar.', 'error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/perfil/atualizar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formValues)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sucesso!',
+                            text: result.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire('Falha', result.message, 'error');
+                    }
+                } catch (error) {
+                    Swal.fire('Erro', 'Não foi possível conectar ao servidor.', 'error');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
