@@ -10,7 +10,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 
-# --- CONFIGURAÇÃO DE ALTA PERFORMANCE V8.3 ---
+# --- CONFIGURAÇÃO DE ALTA PERFORMANCE V8.2 ---
 app = Flask(__name__)
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -27,8 +27,6 @@ app.config.update(
 )
 
 db = SQLAlchemy(app)
-with app.app_context():
-    db.create_all()
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.login_message = "Sessão expirada ou acesso restrito."
@@ -175,21 +173,13 @@ def lista_aulas():
     aulas = query.order_by(Aula.data_criacao.desc()).all()
     return render_template("aulas_lista.html", aulas=aulas)
 
+# ROTA CRÍTICA: Visualizar Aula Individual
 @app.route("/aula/<slug>")
 @login_required
 def ver_aula(slug):
     aula = Aula.query.filter_by(slug=slug).first_or_404()
     progresso = ProgressoAula.query.filter_by(user_id=current_user.id, aula_id=aula.id).first()
     return render_template("aula.html", aula=aula, progresso=progresso)
-
-@app.route("/aula/<slug>/desafio")
-@login_required
-def ver_desafio(slug):
-    aula = Aula.query.filter_by(slug=slug).first_or_404()
-    if not aula.quiz_data:
-        flash("Esta aula não possui um desafio disponível.", "info")
-        return redirect(url_for('ver_aula', slug=slug))
-    return render_template("desafio.html", aula=aula)
 
 # --- SISTEMA DE PROGRESSO E XP ---
 
@@ -207,6 +197,7 @@ def concluir_aula():
     progresso = ProgressoAula.query.filter_by(user_id=current_user.id, aula_id=aula.id).first()
     
     if not progresso:
+        # Primeira conclusão: Ganha XP
         novo_progresso = ProgressoAula(
             user_id=current_user.id, 
             aula_id=aula.id, 
@@ -215,10 +206,11 @@ def concluir_aula():
         )
         current_user.xp += aula.xp_recompensa
         db.session.add(novo_progresso)
-        msg = f"Concluiu a aula e desafio: {aula.titulo}"
+        msg = f"Concluiu a aula: {aula.titulo}"
     else:
+        # Apenas atualiza a nota se for maior
         progresso.nota_quiz = max(progresso.nota_quiz or 0, nota)
-        msg = f"Refez o desafio da aula: {aula.titulo}"
+        msg = f"Refez o quiz da aula: {aula.titulo}"
 
     db.session.commit()
     registrar_log(msg)
@@ -239,13 +231,16 @@ def api_cadastrar_aula():
         return jsonify({"success": False, "message": "O título da aula é obrigatório"}), 400
 
     try:
+        # Gerar Slug Seguro
         base_slug = data.get('nome').lower().strip()
         base_slug = re.sub(r'\s+', '-', base_slug)
         base_slug = re.sub(r'[^a-z0-9-]', '', base_slug)
         slug = f"{base_slug}-{str(uuid.uuid4())[:5]}"
         
         video_id = extrair_id_youtube(data.get('url_video'))
-        
+        if not video_id:
+            return jsonify({"success": False, "message": "Link do YouTube inválido"}), 400
+
         nova_aula = Aula(
             titulo=data.get('nome'),
             slug=slug,
@@ -378,16 +373,38 @@ def api_atualizar_perfil():
 def setup_initial_data():
     with app.app_context():
         db.create_all()
+        # Garante unidade padrão
         if not db.session.query(Unidade).first():
+            
             db.session.add(Unidade(nome="Campus Central", cidade="Luanda"))
             db.session.commit()
+            
+        # Garante Admin Master
         if not User.query.filter_by(role="admin").first():
             admin = User(name="Gestor Quantum", email="master@elim.edu", role="admin", is_approved=True, unidade_id=1)
             admin.set_password("elim@2026")
             db.session.add(admin)
             db.session.commit()
             print(">>> [SISTEMA] Admin Master configurado: master@elim.edu / elim@2026")
+def setup():
+    db.create_all()
 
+    if not Unidade.query.first():
+        db.session.add(Unidade(nome="Campus Central", cidade="SP"))
+        db.session.commit()
+
+    if not User.query.filter_by(email="master@elim.edu").first():
+        admin = User(
+            name="Admin",
+            email="master@elim.edu",
+            role="admin",
+            is_approved=True,
+            unidade_id=1
+        )
+        admin.set_password("123456")
+        db.session.add(admin)
+        db.session.commit()
+with app.app_context():
+    setup()
 if __name__ == "__main__":
-    setup_initial_data()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True)
