@@ -370,22 +370,7 @@ def api_atualizar_perfil():
 
 # --- SETUP INICIAL ---
 
-def setup_initial_data():
-    with app.app_context():
-        db.create_all()
-        # Garante unidade padrão
-        if not db.session.query(Unidade).first():
-            
-            db.session.add(Unidade(nome="Campus Central", cidade="Luanda"))
-            db.session.commit()
-            
-        # Garante Admin Master
-        if not User.query.filter_by(role="admin").first():
-            admin = User(name="Gestor Quantum", email="master@elim.edu", role="admin", is_approved=True, unidade_id=1)
-            admin.set_password("elim@2026")
-            db.session.add(admin)
-            db.session.commit()
-            print(">>> [SISTEMA] Admin Master configurado: master@elim.edu / elim@2026")
+
 def setup():
     db.create_all()
 
@@ -393,17 +378,12 @@ def setup():
         db.session.add(Unidade(nome="Campus Central", cidade="SP"))
         db.session.commit()
 
-    if not User.query.filter_by(email="master@elim.edu").first():
-        admin = User(
-            name="Admin",
-            email="master@elim.edu",
-            role="admin",
-            is_approved=True,
-            unidade_id=1
-        )
-        admin.set_password("123456")
-        db.session.add(admin)
-        db.session.commit()
+     if not User.query.filter_by(role="admin").first():
+            admin = User(name="Gestor Quantum", email="master@elim.edu", role="admin", is_approved=True, unidade_id=1)
+            admin.set_password("elim@2026")
+            db.session.add(admin)
+            db.session.commit()
+            print(">>> [SISTEMA] Admin Master configurado: master@elim.edu / elim@2026")
 with app.app_context():
     setup()
 if __name__ == "__main__":
