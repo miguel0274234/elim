@@ -5,161 +5,238 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ aula.titulo }} | ITEL ELIM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Estilos Padrão Dark/Glass V8 */
+        :root {
+            --bg-deep: #0d1a2b;
+            --secondary: #009ce0;     /* Azul Ciano */
+            --primary: #d4e117;       /* Amarelo Limão */
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-sec: #94a3b8;
+        }
+
         body { 
-            background: #020617; 
+            background: var(--bg-deep); 
             color: #fff; 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
             margin: 0; 
-            background-image: radial-gradient(circle at top right, #1e293b, #020617);
+            background-image: radial-gradient(circle at 0% 0%, rgba(0, 156, 224, 0.05), transparent 50%);
             min-height: 100vh;
         }
         
         .container { 
-            max-width: 1000px; 
-            margin: 50px auto; 
-            padding: 20px; 
+            max-width: 1100px; 
+            margin: 40px auto; 
+            padding: 0 25px; 
         }
 
-        .header-aula { 
-            margin-bottom: 30px; 
+        /* --- NAVEGAÇÃO SUPERIOR --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
-        .badge { 
-            background: rgba(56, 189, 248, 0.2); 
-            color: #38bdf8; 
-            padding: 6px 16px; 
-            border-radius: 20px; 
-            font-weight: bold; 
-            font-size: 13px; 
-            border: 1px solid rgba(56, 189, 248, 0.3);
+        .back-link {
+            color: var(--text-sec);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .back-link:hover { color: var(--secondary); transform: translateX(-5px); }
+
+        /* --- HEADER DA AULA --- */
+        .header-aula { margin-bottom: 40px; }
+
+        .badge-cat { 
+            background: rgba(0, 156, 224, 0.1); 
+            color: var(--secondary); 
+            padding: 6px 14px; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            font-size: 0.7rem; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(0, 156, 224, 0.2);
+        }
+
+        .aula-titulo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 15px 0;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .xp-reward {
+            color: var(--primary);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* --- VIDEO PLAYER --- */
+        .video-wrapper {
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            background: #000;
         }
 
         .video-container { 
             position: relative; 
             padding-bottom: 56.25%; 
             height: 0; 
-            overflow: hidden; 
-            border-radius: 24px; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); 
-            background: #000;
-            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .video-container iframe { 
             position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
             border: 0; 
         }
 
-        .descricao { 
-            margin-top: 40px; 
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            line-height: 1.8; 
-            color: #94a3b8; 
+        /* --- CONTEÚDO --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 50px;
+            align-items: start;
         }
 
-        .descricao h2 {
-            color: #fff;
-            margin-top: 0;
+        .info-card {
+            background: var(--glass);
+            padding: 35px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .info-card h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .info-card p {
+            line-height: 1.8;
+            color: var(--text-sec);
+            font-size: 1rem;
+        }
+
+        /* --- BOTÃO DE DESAFIO --- */
+        .action-card {
+            background: linear-gradient(145deg, rgba(212, 225, 23, 0.05), rgba(0, 156, 224, 0.05));
+            padding: 35px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            text-align: center;
         }
 
         .btn-quiz { 
-            display: inline-flex; 
+            display: flex; 
             align-items: center;
+            justify-content: center;
             gap: 12px;
-            margin-top: 30px; 
-            padding: 18px 35px; 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-            color: #fff; 
+            width: 100%;
+            padding: 20px; 
+            background: var(--primary); 
+            color: var(--bg-deep); 
             text-decoration: none; 
-            border-radius: 15px; 
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+            border-radius: 16px; 
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+            box-shadow: 0 15px 30px rgba(212, 225, 23, 0.15);
         }
 
         .btn-quiz:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(212, 225, 23, 0.3);
             filter: brightness(1.1);
         }
 
-        .xp-tag {
-            color: #fbbf24;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 15px;
+        .quiz-hint {
+            color: var(--text-sec);
+            font-size: 0.8rem;
+            margin-top: 20px;
+            line-height: 1.5;
         }
-        
-        .back-link {
-            color: #64748b;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 20px;
-            transition: color 0.2s;
-        }
-        
-        .back-link:hover {
-            color: #fff;
+
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .aula-titulo { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="{{ url_for('lista_aulas') }}" class="back-link">
-            <i class="fa-solid fa-arrow-left"></i> Voltar para as aulas
-        </a>
+        <div class="top-nav">
+            <a href="{{ url_for('lista_aulas') }}" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Voltar para a Biblioteca
+            </a>
+            <div class="badge-cat">{{ aula.categoria }}</div>
+        </div>
 
         <div class="header-aula">
-            <span class="badge">{{ aula.categoria }}</span>
-            <h1 style="font-size: 2.8rem; margin-top: 15px; margin-bottom: 5px;">{{ aula.titulo }}</h1>
-            <div class="xp-tag">
+            <h1 class="aula-titulo">{{ aula.titulo }}</h1>
+            <div class="xp-reward">
                 <i class="fa-solid fa-bolt"></i> 
-                Recompensa: {{ aula.xp_recompensa }} XP
+                Recompensa disponível: <span>{{ aula.xp_recompensa }} XP</span>
             </div>
         </div>
 
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/{{ aula.url_video }}?rel=0&modestbranding=1" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-            </iframe>
+        <div class="video-wrapper">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/{{ aula.url_video }}?rel=0&modestbranding=1&autoplay=0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            </div>
         </div>
 
-        <div class="descricao">
-            <h2><i class="fa-solid fa-circle-info" style="color: #38bdf8;"></i> Sobre esta aula</h2>
-            <p>{{ aula.descricao }}</p>
-        </div>
+        <div class="content-grid">
+            <div class="info-card">
+                <h2><i class="fa-solid fa-align-left" style="color: var(--secondary);"></i> Resumo do Conteúdo</h2>
+                <p>{{ aula.descricao }}</p>
+            </div>
 
-        {% if aula.quiz_data %}
-        <div style="text-align: center; margin-bottom: 50px;">
-            <a href="{{ url_for('ver_desafio', slug=aula.slug) }}" class="btn-quiz">
-                <i class="fa-solid fa-brain"></i> 
-                Fazer Desafio de Conhecimento
-                <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
-            </a>
-            <p style="color: #64748b; font-size: 0.9rem; margin-top: 15px;">
-                Complete o desafio para garantir seu XP e marcar a aula como concluída.
-            </p>
+            <aside class="actions">
+                {% if aula.quiz_data %}
+                <div class="action-card">
+                    <h3 style="font-size: 1rem; margin-bottom: 20px; font-weight: 800;">PRONTO PARA O TESTE?</h3>
+                    <a href="{{ url_for('ver_desafio', slug=aula.slug) }}" class="btn-quiz">
+                        Iniciar Desafio
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <p class="quiz-hint">
+                        Avalie sua compreensão e desbloqueie seu emblema de conclusão deste módulo.
+                    </p>
+                </div>
+                {% else %}
+                <div class="action-card" style="opacity: 0.6;">
+                    <i class="fa-solid fa-circle-check" style="font-size: 2rem; color: var(--secondary); margin-bottom: 15px;"></i>
+                    <p style="font-size: 0.85rem; font-weight: 700;">Aula puramente informativa. Não há desafio para este tópico.</p>
+                </div>
+                {% endif %}
+            </aside>
         </div>
-        {% else %}
-        <div style="margin-top: 30px; color: #64748b; font-style: italic;">
-            * Esta aula não possui um desafio de quiz vinculado.
-        </div>
-        {% endif %}
     </div>
 </body>
 </html>

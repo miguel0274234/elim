@@ -3,20 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro | Deep Ocean Management</title>
+    <title>Registro | ITEL ELIM Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
-            --primary-reg: #00f5d4; 
-            --bg-deep: #010810;
-            --glass: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(0, 245, 212, 0.15);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
+            /* Paleta Oficial ITEL ELIM */
+            --primary: #d4e117;       /* Amarelo Limão */
+            --secondary: #009ce0;     /* Azul Ciano */
+            --accent: #005da3;        /* Azul Médio */
+            --bg-dark: #162a44;       /* Azul Marinho */
+            --bg-deep: #0d1a2b;       /* Azul Profundo */
+            
+            --glass: rgba(22, 42, 68, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
             background: var(--bg-deep);
@@ -26,127 +32,136 @@
             justify-content: center;
             padding: 20px;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(212, 225, 23, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(0, 156, 224, 0.05) 0%, transparent 40%);
         }
 
         /* Fundo Animado */
-        .ocean-bg {
+        .Elimn-bg {
             position: fixed;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #02111d 0%, #010810 100%);
         }
 
         .blob {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(0, 245, 212, 0.05) 0%, transparent 70%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 156, 224, 0.03) 0%, transparent 70%);
             border-radius: 50%;
-            filter: blur(40px);
-            animation: move 25s infinite alternate;
+            filter: blur(60px);
+            animation: move 20s infinite alternate cubic-bezier(0.45, 0, 0.55, 1);
         }
 
         @keyframes move {
-            from { transform: translate(-20%, -20%); }
-            to { transform: translate(20%, 20%); }
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(10%, 10%); }
         }
 
         /* Card de Registro */
         .reg-card {
             background: var(--glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 40px;
+            border-radius: 32px;
             padding: 50px 40px;
             width: 100%;
-            max-width: 500px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            max-width: 480px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
             text-align: center;
         }
 
         .reg-icon {
-            width: 70px; height: 70px;
-            background: rgba(0, 245, 212, 0.1);
-            border: 2px solid var(--primary-reg);
-            border-radius: 20px;
+            width: 65px; height: 65px;
+            background: rgba(212, 225, 23, 0.1);
+            border: 2px solid var(--primary);
+            border-radius: 18px;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 20px;
-            color: var(--primary-reg);
-            font-size: 1.8rem;
+            color: var(--primary);
+            font-size: 1.6rem;
+            box-shadow: 0 10px 20px rgba(212, 225, 23, 0.1);
         }
 
-        h2 { color: var(--text-main); font-size: 1.8rem; margin-bottom: 8px; }
-        .subtitle { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 30px; }
+        h2 { color: var(--text-main); font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 35px; }
 
-        /* Inputs de Elite */
-        .input-group { position: relative; margin-bottom: 18px; text-align: left; }
+        /* Inputs */
+        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
         
         .input-group i {
-            position: absolute; left: 20px; top: 50%;
+            position: absolute; left: 18px; top: 50%;
             transform: translateY(-50%);
-            color: var(--primary-reg);
-            opacity: 0.7;
+            color: var(--secondary);
+            font-size: 1.1rem;
         }
 
         .input-group input, .input-group select {
             width: 100%;
-            padding: 16px 20px 16px 55px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
+            padding: 16px 20px 16px 52px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
             color: white;
             outline: none;
-            transition: 0.3s;
-            appearance: none; /* Remove seta padrão do select */
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
         }
-
-        .input-group select { cursor: pointer; }
-        .input-group select option { background: #010810; color: white; }
 
         .input-group input:focus, .input-group select:focus {
-            border-color: var(--primary-reg);
-            box-shadow: 0 0 15px rgba(0, 245, 212, 0.1);
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(212, 225, 23, 0.1);
         }
+
+        .input-group select { cursor: pointer; appearance: none; }
+        .input-group select option { background: var(--bg-deep); color: white; }
 
         .btn-register {
             width: 100%;
             padding: 18px;
-            background: var(--primary-reg);
-            color: #010810;
+            background: var(--primary);
+            color: var(--bg-deep);
             border: none;
-            border-radius: 15px;
+            border-radius: 14px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             cursor: pointer;
             transition: 0.4s;
             margin-top: 10px;
+            font-size: 0.9rem;
         }
 
         .btn-register:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 245, 212, 0.3);
+            box-shadow: 0 12px 24px rgba(212, 225, 23, 0.2);
             filter: brightness(1.1);
         }
 
-        .footer-links { margin-top: 30px; font-size: 0.85rem; color: var(--text-dim); }
-        .footer-links a { color: var(--primary-reg); text-decoration: none; font-weight: 600; }
-        .footer-links a:hover { text-decoration: underline; }
+        .btn-register:active { transform: translateY(-1px); }
 
+        .footer-links { margin-top: 30px; font-size: 0.9rem; color: var(--text-muted); }
+        .footer-links a { color: var(--secondary); text-decoration: none; font-weight: 700; transition: 0.3s; }
+        .footer-links a:hover { color: var(--primary); text-decoration: underline; }
+
+        /* Estilo para erro no input */
+        .input-error { border-color: #ef4444 !important; }
     </style>
 </head>
 <body>
 
-    <div class="ocean-bg">
+    <div class="Elimn-bg">
         <div class="blob"></div>
     </div>
 
     <main class="reg-card">
         <div class="reg-icon"><i class="fas fa-user-plus"></i></div>
         <h2>Novo Aluno</h2>
-        <p class="subtitle">Cadastre-se para acessar o Portal Ocean</p>
+        <p class="subtitle">Cadastre-se para acessar o Portal ITEL ELIM</p>
 
         <form id="registerForm">
             <div class="input-group">
@@ -198,6 +213,7 @@
             btn.disabled = true;
 
             try {
+                // Simulação de resposta para demonstração visual
                 const response = await fetch('/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -209,11 +225,12 @@
                 if (response.ok) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Sucesso!',
+                        title: 'Bem-vindo!',
                         text: 'Sua conta foi criada com sucesso.',
-                        background: '#010810',
+                        background: '#162a44',
                         color: '#fff',
-                        confirmButtonColor: '#00f5d4'
+                        confirmButtonColor: '#d4e117',
+                        confirmButtonText: 'Acessar Portal'
                     }).then(() => {
                         window.location.href = result.redirect;
                     });
@@ -226,9 +243,9 @@
                     icon: 'error',
                     title: 'Ops!',
                     text: err.message,
-                    background: '#010810',
+                    background: '#162a44',
                     color: '#fff',
-                    confirmButtonColor: '#ff4444'
+                    confirmButtonColor: '#009ce0'
                 });
                 btn.innerHTML = 'Criar Minha Conta';
                 btn.disabled = false;

@@ -3,147 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafio: {{ aula.titulo }} | ELIM V8</title>
+    <title>Desafio: {{ aula.titulo }} | ITEL ELIM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #38bdf8;
-            --secondary: #10b981;
-            --bg: #020617;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
+            --primary: #d4e117;       /* Amarelo Limão */
+            --secondary: #009ce0;     /* Azul Ciano */
+            --bg-deep: #0d1a2b;       /* Azul Profundo */
+            --glass: rgba(22, 42, 68, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: var(--bg);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
+            background-color: var(--bg-deep);
+            color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top right, #1e293b, #020617);
+            background-image: radial-gradient(circle at top right, rgba(0, 156, 224, 0.1), transparent);
         }
 
         .quiz-container {
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
+            width: 90%;
+            max-width: 650px;
+            padding: 40px;
             background: var(--glass);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 32px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.6s ease-out;
         }
 
-        .quiz-header {
-            text-align: center;
-            margin-bottom: 30px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header { margin-bottom: 35px; }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
         }
 
         .progress-bar {
-            width: 100%;
+            flex-grow: 1;
             height: 8px;
             background: rgba(255,255,255,0.1);
             border-radius: 10px;
-            margin-bottom: 20px;
             overflow: hidden;
         }
 
         #progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
             width: 0%;
-            transition: width 0.4s ease;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #question-counter {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .question-card h2 {
             font-size: 1.4rem;
-            margin-bottom: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
             line-height: 1.4;
+            color: #fff;
         }
 
-        .options-grid {
-            display: grid;
-            gap: 12px;
-        }
+        .options-grid { display: grid; gap: 15px; }
 
         .option-btn {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
-            padding: 16px;
-            border-radius: 12px;
-            color: #cbd5e1;
+            padding: 20px;
+            border-radius: 16px;
+            color: #94a3b8;
             text-align: left;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .option-btn:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--primary);
-            transform: translateX(5px);
+            background: rgba(0, 156, 224, 0.1);
+            border-color: var(--secondary);
+            color: #fff;
+            transform: translateX(8px);
         }
 
         .option-btn.selected {
-            background: var(--primary);
-            color: var(--bg);
-            border-color: var(--primary);
-            font-weight: bold;
+            background: var(--secondary);
+            color: #fff;
+            border-color: var(--secondary);
+            box-shadow: 0 10px 20px rgba(0, 156, 224, 0.2);
         }
 
         .quiz-footer {
-            margin-top: 30px;
+            margin-top: 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .btn-next {
-            background: var(--secondary);
-            color: white;
+            background: var(--primary);
+            color: var(--bg-deep);
             border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: bold;
+            padding: 14px 30px;
+            border-radius: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: opacity 0.3s;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn-next:disabled {
-            opacity: 0.5;
+            background: #1e293b;
+            color: #475569;
             cursor: not-allowed;
         }
 
-        /* Tela de Resultado */
-        #result-screen {
-            display: none;
-            text-align: center;
+        .btn-next:not(:disabled):hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
         }
 
+        /* Tela de Resultado */
+        #result-screen { display: none; text-align: center; padding: 20px 0; }
+
         .score-circle {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
-            border: 5px solid var(--secondary);
+            border: 6px solid var(--primary);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 30px;
+            background: rgba(212, 225, 23, 0.05);
+            box-shadow: 0 0 30px rgba(212, 225, 23, 0.1);
         }
 
         .xp-badge {
-            background: #fbbf24;
-            color: #000;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 10px;
+            background: var(--primary);
+            color: var(--bg-deep);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
         }
+
+        #result-title { font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: #fff; }
+        #result-msg { color: #94a3b8; margin-bottom: 35px; }
+
     </style>
 </head>
 <body>
@@ -151,37 +193,49 @@
 <div class="quiz-container">
     <div id="quiz-screen">
         <div class="quiz-header">
-            <div class="progress-bar"><div id="progress-fill"></div></div>
-            <p id="question-counter" style="color: var(--primary); font-weight: bold;">Questão 1 de 5</p>
+            <div class="progress-container">
+                <div class="progress-bar"><div id="progress-fill"></div></div>
+                <span id="question-counter">Q. 1/5</span>
+            </div>
         </div>
 
         <div class="question-card">
-            <h2 id="question-text">Carregando pergunta...</h2>
+            <h2 id="question-text">Preparando sua avaliação...</h2>
             <div class="options-grid" id="options-container">
                 </div>
         </div>
 
         <div class="quiz-footer">
-            <span id="timer" style="color: #64748b;"><i class="fa-regular fa-clock"></i> Desafio Ativo</span>
-            <button class="btn-next" id="next-btn" disabled onclick="nextQuestion()">Próxima <i class="fa-solid fa-arrow-right"></i></button>
+            <span id="timer" style="color: #475569; font-size: 0.85rem; font-weight: 600;">
+                <i class="fa-solid fa-microchip"></i> ELIM V8 ENGINE
+            </span>
+            <button class="btn-next" id="next-btn" disabled onclick="nextQuestion()">
+                Próxima <i class="fa-solid fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 
     <div id="result-screen">
         <div class="score-circle">
-            <span id="final-score" style="font-size: 2rem; font-weight: bold;">0</span>
-            <span style="font-size: 0.8rem;">ACERTOS</span>
+            <span id="final-score" style="font-size: 2.5rem; font-weight: 900; color: #fff;">0</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--primary); letter-spacing: 1px;">ACERTOS</span>
         </div>
-        <h1 id="result-title">Incrível!</h1>
-        <p id="result-msg">Você concluiu o desafio com sucesso.</p>
-        <div class="xp-badge"><i class="fa-solid fa-bolt"></i> +<span id="xp-gain">0</span> XP Adicionado</div>
-        <br><br>
-        <a href="{{ url_for('lista_aulas') }}" class="btn-next" style="text-decoration: none;">Voltar para Aulas</a>
+        <h1 id="result-title">Excelente!</h1>
+        <p id="result-msg">Sua performance foi registrada no banco de dados do ITEL.</p>
+        
+        <div class="xp-badge">
+            <i class="fa-solid fa-bolt"></i> +<span id="xp-gain">0</span> XP CONQUISTADO
+        </div>
+        
+        <div style="margin-top: 40px;">
+            <a href="{{ url_for('lista_aulas') }}" class="btn-next" style="text-decoration: none; justify-content: center; width: 100%;">
+                Concluir Desafio
+            </a>
+        </div>
     </div>
 </div>
 
 <script>
-    // Dados injetados pelo Flask
     const quizData = {{ aula.quiz_data | tojson }};
     const aulaId = {{ aula.id }};
     const xpBase = {{ aula.xp_recompensa }};
@@ -196,7 +250,7 @@
         
         const q = quizData[currentQuestion];
         document.getElementById('question-text').innerText = q.pergunta;
-        document.getElementById('question-counter').innerText = `Questão ${currentQuestion + 1} de ${quizData.length}`;
+        document.getElementById('question-counter').innerText = `Q. ${currentQuestion + 1}/${quizData.length}`;
         
         const progress = ((currentQuestion) / quizData.length) * 100;
         document.getElementById('progress-fill').style.width = `${progress}%`;
@@ -207,7 +261,7 @@
         q.opcoes.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
-            btn.innerText = opt;
+            btn.innerHTML = `<span style="opacity: 0.3; font-size: 0.8rem;">0${index+1}</span> ${opt}`;
             btn.onclick = () => selectOption(index, btn);
             optionsContainer.appendChild(btn);
         });
@@ -241,10 +295,14 @@
         const finalScorePercent = (score / quizData.length) * 100;
         document.getElementById('final-score').innerText = `${score}/${quizData.length}`;
         document.getElementById('xp-gain').innerText = xpBase;
+        
+        if(finalScorePercent < 50) {
+            document.getElementById('result-title').innerText = "Continue Praticando!";
+            document.getElementById('result-title').style.color = "#f87171";
+        }
 
-        // Enviar resultado para o Servidor (Rota que criamos no app.py)
         try {
-            const response = await fetch('/api/aulas/concluir', {
+            await fetch('/api/aulas/concluir', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -252,14 +310,11 @@
                     nota: finalScorePercent
                 })
             });
-            const result = await response.json();
-            console.log("Progresso salvo. Novo XP:", result.new_xp);
         } catch (error) {
-            console.error("Erro ao salvar progresso:", error);
+            console.error("Erro ao sincronizar progresso:", error);
         }
     }
 
-    // Iniciar
     loadQuestion();
 </script>
 

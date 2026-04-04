@@ -5,22 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acesso | ITEL ELIM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --azul-escuro: #020617;
-            --azul-claro: #3da9e2;
-            --dourado: #d4af37;
-            --glass: rgba(15, 23, 42, 0.8);
-            --borda-glass: rgba(255, 255, 255, 0.05);
+            /* Cores Oficiais ITEL ELIM */
+            --primary: #d4e117;       /* Amarelo Limão */
+            --secondary: #009ce0;     /* Azul Ciano */
+            --bg-deep: #0d1a2b;       /* Azul Profundo */
+            --glass: rgba(22, 42, 68, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background-color: var(--azul-escuro);
-            background-image: radial-gradient(circle at center, rgba(61, 169, 226, 0.15) 0%, transparent 70%);
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(0, 156, 224, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(212, 225, 23, 0.05) 0%, transparent 40%);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -32,101 +35,132 @@
         /* Card de Acesso */
         .access-card {
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--borda-glass);
-            padding: 50px 40px;
-            border-radius: 32px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            padding: 60px 45px;
+            border-radius: 40px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.8s ease-out;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .logo-box {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .logo-box i {
-            font-size: 3rem;
-            color: var(--azul-claro);
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 10px rgba(61, 169, 226, 0.3));
+            font-size: 3.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(0, 156, 224, 0.3));
         }
 
-        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
-        p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 40px; }
+        h1 { 
+            font-size: 1.6rem; 
+            font-weight: 800; 
+            margin-bottom: 12px; 
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
 
-        /* Estilização dos Botões */
+        p { 
+            color: #94a3b8; 
+            font-size: 0.9rem; 
+            line-height: 1.6;
+            margin-bottom: 45px; 
+        }
+
+        /* Botões */
         .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
         }
 
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 16px;
-            border-radius: 16px;
+            gap: 12px;
+            padding: 18px;
+            border-radius: 18px;
             text-decoration: none;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: 0.3s;
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        /* Botão de Entrar (Amarelo Limão) */
         .btn-login {
-            background: var(--azul-claro);
-            color: var(--azul-escuro);
+            background: var(--primary);
+            color: var(--bg-deep);
         }
 
         .btn-login:hover {
-            background: #fff;
-            transform: scale(1.02);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(212, 225, 23, 0.2);
+            filter: brightness(1.1);
         }
 
+        /* Botão de Cadastro (Azul Ciano / Outline) */
         .btn-register {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border: 1px solid var(--borda-glass);
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
         }
 
         .btn-register:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--dourado);
-            color: var(--dourado);
+            background: var(--secondary);
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 156, 224, 0.2);
         }
 
-        /* Efeito de brilho no fundo */
-        .glow {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: var(--azul-claro);
-            filter: blur(150px);
-            opacity: 0.1;
-            z-index: -1;
-            border-radius: 50%;
+        .footer-link {
+            margin-top: 35px;
+            display: block;
+            color: #64748b;
+            font-size: 0.8rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+        }
+
+        .footer-link i {
+            margin-right: 5px;
+        }
+
+        /* Ajustes Mobile */
+        @media (max-width: 480px) {
+            .access-card {
+                padding: 40px 25px;
+                max-width: 90%;
+            }
+            h1 { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="glow" style="top: 10%; left: 10%;"></div>
-    <div class="glow" style="bottom: 10%; right: 10%;"></div>
-
     <div class="access-card">
         <div class="logo-box">
-            <i class="fa-solid fa-graduation-cap"></i>
-            <h1>Bem-vindo ao ITEL</h1>
-            <p>Escolha como deseja prosseguir para acessar a plataforma de ensino.</p>
+            <i class="fa-solid fa-shield-halved"></i>
+            <h1>Portal ITEL ELIM</h1>
+            <p>Selecione uma das opções abaixo para gerenciar seu conhecimento ou iniciar seus estudos.</p>
         </div>
 
         <div class="btn-group">
@@ -139,11 +173,9 @@
             </a>
         </div>
 
-        <div style="margin-top: 30px;">
-            <a href="/" style="color: #64748b; font-size: 0.8rem; text-decoration: none;">
-                <i class="fa-solid fa-arrow-left"></i> Voltar ao Início
-            </a>
-        </div>
+        <a href="/" class="footer-link">
+            <i class="fa-solid fa-house"></i> Voltar à página inicial
+        </a>
     </div>
 
 </body>
