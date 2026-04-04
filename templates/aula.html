@@ -10,11 +10,11 @@
     <style>
         :root {
             --bg-deep: #0d1a2b;
-            --secondary: #009ce0;     /* Azul Ciano */
-            --primary: #d4e117;       /* Amarelo Limão */
+            --secondary: #009ce0; 
+            --primary: #d4e117; 
             --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.08);
-            --text-sec: #94a3b8;
+            --text-sec: #cbd5e1; /* Melhorado para leitura */
         }
 
         body { 
@@ -22,8 +22,9 @@
             color: #fff; 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             margin: 0; 
-            background-image: radial-gradient(circle at 0% 0%, rgba(0, 156, 224, 0.05), transparent 50%);
+            background-image: radial-gradient(circle at 0% 0%, rgba(0, 156, 224, 0.07), transparent 50%);
             min-height: 100vh;
+            line-height: 1.6;
         }
         
         .container { 
@@ -32,7 +33,7 @@
             padding: 0 25px; 
         }
 
-        /* --- NAVEGAÇÃO SUPERIOR --- */
+        /* NAVEGAÇÃO */
         .top-nav {
             display: flex;
             justify-content: space-between;
@@ -41,7 +42,7 @@
         }
 
         .back-link {
-            color: var(--text-sec);
+            color: #94a3b8;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 700;
@@ -52,8 +53,8 @@
         }
         .back-link:hover { color: var(--secondary); transform: translateX(-5px); }
 
-        /* --- HEADER DA AULA --- */
-        .header-aula { margin-bottom: 40px; }
+        /* HEADER */
+        .header-aula { margin-bottom: 35px; }
 
         .badge-cat { 
             background: rgba(0, 156, 224, 0.1); 
@@ -68,9 +69,9 @@
         }
 
         .aula-titulo {
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
             font-weight: 800;
-            margin: 15px 0;
+            margin: 15px 0 10px;
             letter-spacing: -1px;
             line-height: 1.1;
         }
@@ -81,16 +82,16 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
-        /* --- VIDEO PLAYER --- */
+        /* PLAYER */
         .video-wrapper {
             position: relative;
-            border-radius: 32px;
+            border-radius: 24px;
             overflow: hidden;
             border: 1px solid var(--border);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
             background: #000;
         }
 
@@ -107,44 +108,47 @@
             border: 0; 
         }
 
-        /* --- CONTEÚDO --- */
+        /* CONTEÚDO GRID */
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 350px;
-            gap: 40px;
-            margin-top: 50px;
-            align-items: start;
+            gap: 30px;
+            margin-top: 40px;
+            padding-bottom: 60px;
         }
 
         .info-card {
             background: var(--glass);
-            padding: 35px;
+            padding: 30px;
             border-radius: 24px;
             border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
         .info-card h2 {
             font-size: 1.2rem;
             font-weight: 800;
             margin-bottom: 20px;
+            color: #fff;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .info-card p {
-            line-height: 1.8;
+        .info-card .descricao-texto {
             color: var(--text-sec);
-            font-size: 1rem;
+            white-space: pre-wrap; /* Mantém quebras de linha do back-end */
         }
 
-        /* --- BOTÃO DE DESAFIO --- */
+        /* ASIDE ACTIONS */
         .action-card {
-            background: linear-gradient(145deg, rgba(212, 225, 23, 0.05), rgba(0, 156, 224, 0.05));
-            padding: 35px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 30px;
             border-radius: 24px;
             border: 1px solid var(--border);
             text-align: center;
+            position: sticky;
+            top: 100px;
         }
 
         .btn-quiz { 
@@ -153,86 +157,99 @@
             justify-content: center;
             gap: 12px;
             width: 100%;
-            padding: 20px; 
+            padding: 18px; 
             background: var(--primary); 
-            color: var(--bg-deep); 
+            color: #000; 
             text-decoration: none; 
-            border-radius: 16px; 
+            border-radius: 14px; 
             font-weight: 800;
             text-transform: uppercase;
             font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            transition: 0.3s;
-            box-shadow: 0 15px 30px rgba(212, 225, 23, 0.15);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .btn-quiz:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(212, 225, 23, 0.3);
+            transform: scale(1.03);
             filter: brightness(1.1);
+            box-shadow: 0 15px 30px rgba(212, 225, 23, 0.2);
         }
 
         .quiz-hint {
-            color: var(--text-sec);
+            color: #64748b;
             font-size: 0.8rem;
-            margin-top: 20px;
-            line-height: 1.5;
+            margin-top: 15px;
         }
 
         @media (max-width: 900px) {
             .content-grid { grid-template-columns: 1fr; }
-            .aula-titulo { font-size: 2rem; }
+            .action-card { position: static; }
+            .container { margin: 20px auto; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="top-nav">
+        <nav class="top-nav">
             <a href="{{ url_for('lista_aulas') }}" class="back-link">
-                <i class="fa-solid fa-arrow-left"></i> Voltar para a Biblioteca
+                <i class="fa-solid fa-chevron-left"></i> Biblioteca de Estudos
             </a>
-            <div class="badge-cat">{{ aula.categoria }}</div>
-        </div>
+            <div class="badge-cat">{{ aula.categoria | default('Geral') }}</div>
+        </nav>
 
-        <div class="header-aula">
+        <header class="header-aula">
             <h1 class="aula-titulo">{{ aula.titulo }}</h1>
             <div class="xp-reward">
-                <i class="fa-solid fa-bolt"></i> 
-                Recompensa disponível: <span>{{ aula.xp_recompensa }} XP</span>
+                <i class="fa-solid fa-circle-check"></i> 
+                Conclusão: <span>+{{ aula.xp_recompensa | default(50) }} Pontos de Estudo</span>
             </div>
-        </div>
+        </header>
 
         <div class="video-wrapper">
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/{{ aula.url_video }}?rel=0&modestbranding=1&autoplay=0" 
+                {% if aula.url_video %}
+                <iframe src="https://www.youtube.com/embed/{{ aula.url_video }}?rel=0&showinfo=0&modestbranding=1" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen>
                 </iframe>
+                {% else %}
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <i class="fa-solid fa-video-slash" style="font-size: 3rem; opacity: 0.2;"></i>
+                    <p style="margin-top: 10px; color: var(--text-sec);">Vídeo não disponível para esta aula.</p>
+                </div>
+                {% endif %}
             </div>
         </div>
 
         <div class="content-grid">
-            <div class="info-card">
-                <h2><i class="fa-solid fa-align-left" style="color: var(--secondary);"></i> Resumo do Conteúdo</h2>
-                <p>{{ aula.descricao }}</p>
-            </div>
+            <article class="info-card">
+                <h2><i class="fa-solid fa-book-open" style="color: var(--secondary);"></i> Material de Apoio</h2>
+                <div class="descricao-texto">
+                    {% if aula.descricao %}
+                        {{ aula.descricao | safe }}
+                    {% else %}
+                        <p>Nenhuma descrição detalhada foi fornecida para este módulo. Assista ao vídeo acima para absorver o conteúdo completo.</p>
+                    {% endif %}
+                </div>
+            </article>
 
             <aside class="actions">
                 {% if aula.quiz_data %}
                 <div class="action-card">
-                    <h3 style="font-size: 1rem; margin-bottom: 20px; font-weight: 800;">PRONTO PARA O TESTE?</h3>
+                    <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: #fff;">DESAFIO DE CONHECIMENTO</h3>
                     <a href="{{ url_for('ver_desafio', slug=aula.slug) }}" class="btn-quiz">
-                        Iniciar Desafio
-                        <i class="fa-solid fa-arrow-right"></i>
+                        Iniciar Quiz agora
+                        <i class="fa-solid fa-bolt"></i>
                     </a>
                     <p class="quiz-hint">
-                        Avalie sua compreensão e desbloqueie seu emblema de conclusão deste módulo.
+                        Acerte as questões para validar seu progresso e ganhar seu bônus de XP.
                     </p>
                 </div>
                 {% else %}
-                <div class="action-card" style="opacity: 0.6;">
-                    <i class="fa-solid fa-circle-check" style="font-size: 2rem; color: var(--secondary); margin-bottom: 15px;"></i>
-                    <p style="font-size: 0.85rem; font-weight: 700;">Aula puramente informativa. Não há desafio para este tópico.</p>
+                <div class="action-card" style="border-style: dashed; background: transparent;">
+                    <i class="fa-solid fa-check-double" style="font-size: 1.5rem; color: var(--secondary); margin-bottom: 10px; display: block;"></i>
+                    <p style="font-size: 0.8rem; color: var(--text-sec); font-weight: 600;">
+                        Este módulo é de leitura e visualização. Não há necessidade de teste final.
+                    </p>
                 </div>
                 {% endif %}
             </aside>

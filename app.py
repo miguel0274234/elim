@@ -180,11 +180,26 @@ def lista_aulas():
 @app.route("/aula/<slug>")
 @login_required
 def ver_aula(slug):
+    # Busca a aula pelo slug ou retorna 404
     aula = Aula.query.filter_by(slug=slug).first_or_404()
-    progresso = ProgressoAula.query.filter_by(user_id=current_user.id, aula_id=aula.id).first()
+    
+    # Busca o progresso do usuário nessa aula específica
+    progresso = ProgressoAula.query.filter_by(
+        user_id=current_user.id, 
+        aula_id=aula.id
+    ).first()
+    
     return render_template("aula.html", aula=aula, progresso=progresso)
 
-# --- SISTEMA DE PROGRESSO E XP ---
+@app.route("/aula/<slug>/desafio")
+@login_required
+def ver_desafio(slug):
+    # Esta é a rota que o seu HTML estava procurando!
+    aula = Aula.query.filter_by(slug=slug).first_or_404()
+    
+    # Aqui você renderizaria o template do quiz/desafio
+    # Se você ainda não tem o arquivo 'desafio.html', crie-o ou aponte para um existente
+    return render_template("desafio.html", aula=aula)
 
 @app.route("/api/aulas/concluir", methods=['POST'])
 @login_required

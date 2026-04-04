@@ -10,14 +10,14 @@
     
     <style>
         :root {
-            /* Identidade ITEL ELIM */
-            --primary: #d4e117;       /* Amarelo Limão */
-            --secondary: #009ce0;     /* Azul Ciano */
-            --bg-deep: #0d1a2b;       /* Azul Profundo */
-            --bg-card: rgba(22, 42, 68, 0.7);
+            --primary: #d4e117; 
+            --secondary: #009ce0; 
+            --bg-deep: #0d1a2b; 
+            --bg-card: rgba(13, 26, 43, 0.8);
             --glass-border: rgba(255, 255, 255, 0.08);
             --text-prio: #f8fafc;
             --text-sec: #94a3b8;
+            --accent-glow: rgba(0, 156, 224, 0.3);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -25,302 +25,268 @@
         body {
             background-color: var(--bg-deep);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 156, 224, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(212, 225, 23, 0.04) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(0, 156, 224, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(212, 225, 23, 0.05) 0%, transparent 40%);
             color: var(--text-prio);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             overflow-x: hidden;
         }
 
         header {
-            padding: 20px 5%;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--glass-border);
-            z-index: 100;
+            position: sticky; top: 0; z-index: 1000;
         }
 
         .btn-back {
-            text-decoration: none;
-            color: var(--text-sec);
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            border-radius: 12px;
+            text-decoration: none; color: var(--text-sec);
+            font-weight: 700; font-size: 0.8rem;
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 18px; border-radius: 12px;
             background: rgba(255, 255, 255, 0.03);
-            transition: 0.3s;
+            transition: 0.3s; border: 1px solid var(--glass-border);
         }
-        .btn-back:hover { background: rgba(255, 255, 255, 0.08); color: #fff; transform: translateX(-3px); }
-
-        .logo-text { font-weight: 800; font-size: 0.8rem; color: var(--secondary); letter-spacing: 2px; }
+        .btn-back:hover { background: var(--secondary); color: #fff; transform: translateX(-5px); }
 
         .main-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 80px 20px;
+            padding: 100px 20px 60px;
+            display: flex; justify-content: center;
         }
 
         .profile-card {
-            width: 100%;
-            max-width: 480px;
+            width: 100%; max-width: 450px;
             background: var(--bg-card);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(40px);
             border: 1px solid var(--glass-border);
             border-radius: 40px;
-            padding: 45px;
+            padding: 40px;
             position: relative;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-            animation: cardEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.6);
         }
 
-        /* Avatar & Role */
-        .avatar-section {
+        /* Avatar com Anel de Progresso */
+        .avatar-container {
             position: relative;
-            width: 140px;
-            height: 140px;
-            margin: -115px auto 25px;
+            width: 150px; height: 150px;
+            margin: -110px auto 20px;
         }
 
-        .avatar-glow {
-            position: absolute;
-            inset: -8px;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            border-radius: 50%;
-            filter: blur(15px);
-            opacity: 0.4;
-            animation: rotateGlow 6s linear infinite;
+        .progress-ring {
+            position: absolute; top: 0; left: 0;
+            transform: rotate(-90deg);
         }
 
         .avatar-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            inset: 10px;
             background: #1e293b;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 3.5rem;
-            border: 5px solid var(--bg-deep);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            border: 4px solid var(--bg-deep);
+            z-index: 2;
         }
 
-        .role-tag {
+        /* Level Badge */
+        .level-floating {
             position: absolute;
-            bottom: 5px;
-            right: 0;
-            background: var(--secondary);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-        }
-        .role-admin { background: var(--primary); color: var(--bg-deep); }
-
-        .profile-header { text-align: center; margin-bottom: 30px; }
-        .profile-header h1 { font-size: 2.1rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; color: #fff; }
-        .profile-header p { color: var(--secondary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
-
-        /* Stats Bar */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .stat-item {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 20px;
-            text-align: center;
-        }
-        .stat-value { display: block; font-size: 1.2rem; font-weight: 800; color: var(--primary); }
-        .stat-label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; font-weight: 700; }
-
-        /* Info Stack */
-        .info-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 35px; }
-
-        .info-pill {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            padding: 16px 20px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: 0.3s;
-        }
-        .info-pill:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--secondary); }
-        .info-pill i { color: var(--secondary); font-size: 1.1rem; }
-        .info-pill .label { font-size: 0.65rem; color: var(--text-sec); text-transform: uppercase; font-weight: 800; display: block; }
-        .info-pill .value { font-size: 0.95rem; color: #fff; font-weight: 500; }
-
-        /* Actions */
-        .action-group { display: flex; flex-direction: column; gap: 12px; }
-
-        .btn-modern {
-            width: 100%;
-            padding: 18px;
-            border-radius: 18px;
-            border: none;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .btn-primary { 
-            background: var(--primary); 
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
             color: var(--bg-deep);
-            box-shadow: 0 10px 25px rgba(212, 225, 23, 0.2);
+            padding: 4px 15px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 20px rgba(212, 225, 23, 0.3);
+            z-index: 3;
         }
-        .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(212, 225, 23, 0.3); }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+        .profile-info { text-align: center; margin-bottom: 25px; }
+        .profile-info h1 { font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
+        .profile-info p { color: var(--text-sec); font-size: 0.85rem; }
+
+        /* Barra de Experiência Estilizada */
+        .xp-container {
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-radius: 24px;
+            margin-bottom: 25px;
             border: 1px solid var(--glass-border);
         }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); color: var(--secondary); border-color: var(--secondary); }
 
-        .btn-danger {
-            background: transparent;
-            color: #f87171;
-            margin-top: 5px;
-            font-size: 0.85rem;
-        }
-        .btn-danger:hover { color: #ef4444; background: rgba(239, 68, 68, 0.08); }
-
-        /* Animations */
-        @keyframes cardEntrance { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        @media (max-width: 480px) {
-            .profile-card { padding: 40px 20px; }
-            .avatar-section { width: 120px; height: 120px; margin-top: -100px; }
+        .xp-header {
+            display: flex; justify-content: space-between;
+            font-size: 0.75rem; font-weight: 800;
+            margin-bottom: 10px; text-transform: uppercase;
         }
 
-        /* SweetAlert2 Customization */
-        .swal2-popup { border-radius: 24px !important; background: #162a44 !important; color: #fff !important; }
-        .swal2-input { border-radius: 12px !important; background: #0d1a2b !important; border: 1px solid rgba(255,255,255,0.1) !important; color: #fff !important; }
-        .swal2-confirm { border-radius: 12px !important; font-weight: 700 !important; }
+        .xp-bar-bg {
+            height: 10px; background: rgba(0,0,0,0.3);
+            border-radius: 20px; overflow: hidden;
+            position: relative;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            box-shadow: 0 0 15px var(--accent-glow);
+            transition: width 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        /* Grid de Informações */
+        .info-grid { display: grid; gap: 12px; margin-bottom: 30px; }
+        .info-card-mini {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            padding: 15px 20px;
+            border-radius: 20px;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .info-card-mini i { color: var(--secondary); opacity: 0.8; }
+        .info-card-mini span.label { font-size: 0.65rem; color: var(--text-sec); display: block; text-transform: uppercase; font-weight: 700; }
+        .info-card-mini span.value { font-size: 0.9rem; font-weight: 600; }
+
+        /* Botões */
+        .btn-action {
+            width: 100%; padding: 16px;
+            border-radius: 18px; border: none;
+            font-weight: 800; font-size: 0.9rem;
+            cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 12px;
+            transition: 0.3s; margin-bottom: 12px;
+            text-decoration: none;
+        }
+
+        .btn-edit { background: #fff; color: #000; }
+        .btn-edit:hover { background: var(--primary); transform: translateY(-3px); }
+
+        .btn-logout { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-logout:hover { background: #ef4444; color: #fff; }
+
     </style>
 </head>
 <body>
 
     <header>
         <a href="{{ url_for('dashboard') }}" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i> Voltar
+            <i class="fa-solid fa-chevron-left"></i> DASHBOARD
         </a>
-        <div class="logo-text">ITEL ELIM ELITE</div>
+        <div style="font-weight: 900; letter-spacing: 2px; font-size: 0.7rem; color: var(--primary);">ELITE UNIT</div>
     </header>
 
     <main class="main-wrapper">
         <div class="profile-card">
-            
-            <div class="avatar-section">
-                <div class="avatar-glow"></div>
+            <div class="avatar-container">
+                <svg class="progress-ring" width="150" height="150">
+                    <circle stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="66" cx="75" cy="75"/>
+                    <circle id="circle-progress" stroke="var(--secondary)" stroke-width="8" stroke-dasharray="414.69" stroke-dashoffset="414.69" stroke-linecap="round" fill="transparent" r="66" cx="75" cy="75"/>
+                </svg>
                 <div class="avatar-inner">
                     {% if user.role == 'admin' %}
-                        <i class="fa-solid fa-crown" style="color: var(--primary);"></i>
+                        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i>
                     {% else %}
-                        <i class="fa-solid fa-user-astronaut" style="color: var(--secondary);"></i>
+                        <i class="fa-solid fa-user-ninja" style="color: var(--secondary);"></i>
                     {% endif %}
                 </div>
-                <span class="role-tag {% if user.role == 'admin' %}role-admin{% endif %}">
-                    {{ user.role }}
-                </span>
+                <div class="level-floating">Lvl <span id="lvl-txt">0</span></div>
             </div>
 
-            <div class="profile-header">
-                <h1 id="display-name">{{ user.name }}</h1>
-                <p>Nível {{ (user.xp / 1000)|int + 1 }} • Status Ativo</p>
+            <div class="profile-info">
+                <h1>{{ user.name }}</h1>
+                <p>{{ user.email }}</p>
             </div>
 
-            <div class="stats-bar">
-                <div class="stat-item">
-                    <span class="stat-value">{{ user.xp }}</span>
-                    <span class="stat-label">Total XP</span>
+            <div class="xp-container">
+                <div class="xp-header">
+                    <span>Experiência</span>
+                    <span id="xp-display">{{ user.xp }} / 1000 XP</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-value">#{{ user.id }}</span>
-                    <span class="stat-label">ID Global</span>
+                <div class="xp-bar-bg">
+                    <div class="xp-bar-fill" id="xp-bar"></div>
+                </div>
+                <div style="font-size: 0.6rem; color: var(--text-sec); margin-top: 8px; text-align: center; font-weight: 700;">
+                    Faltam <span id="xp-remaining">0</span> XP para o próximo nível
                 </div>
             </div>
 
-            <div class="info-stack">
-                <div class="info-pill">
-                    <i class="fa-solid fa-envelope"></i>
+            <div class="info-grid">
+                <div class="info-card-mini">
+                    <i class="fa-solid fa-id-badge"></i>
                     <div>
-                        <span class="label">Identidade Acadêmica</span>
-                        <span class="value">{{ user.email }}</span>
+                        <span class="label">Operacional ID</span>
+                        <span class="value">#{{ user.id }}</span>
                     </div>
                 </div>
-
-                <div class="info-pill">
-                    <i class="fa-solid fa-building"></i>
+                <div class="info-card-mini">
+                    <i class="fa-solid fa-map-location-dot"></i>
                     <div>
-                        <span class="label">Unidade de Operação</span>
-                        <span class="value">{{ user.unidade_rel.nome if user.unidade_rel else 'Não Vinculado' }}</span>
+                        <span class="label">Unidade</span>
+                        <span class="value">{{ user.unidade_rel.nome if user.unidade_rel else 'Setor Externo' }}</span>
                     </div>
                 </div>
             </div>
 
             <div class="action-group">
-                <button onclick="abrirModalEdicao()" class="btn-modern btn-primary">
-                    <i class="fa-solid fa-pen-to-square"></i> Editar Perfil
+                <button onclick="abrirModalEdicao()" class="btn-action btn-edit">
+                    <i class="fa-solid fa-sliders"></i> AJUSTAR PERFIL
                 </button>
-
+                
                 {% if user.role == 'admin' %}
-                <a href="{{ url_for('lista_aprovacoes') }}" class="btn-modern btn-secondary">
-                    <i class="fa-solid fa-key"></i> Gestão de Acessos
+                <a href="{{ url_for('lista_aprovacoes') }}" class="btn-action" style="background: var(--secondary); color: #fff;">
+                    <i class="fa-solid fa-key"></i> COMANDO CENTRAL
                 </a>
                 {% endif %}
-                
-                <a href="/logout" class="btn-modern btn-danger">
-                    <i class="fa-solid fa-power-off"></i> Finalizar Sessão
+
+                <a href="/logout" class="btn-action btn-logout">
+                    <i class="fa-solid fa-power-off"></i> ENCERRAR SESSÃO
                 </a>
             </div>
         </div>
     </main>
 
     <script>
+        // Lógica de Cálculo de XP Estilo RPG (Nível a cada 1000 XP)
+        function atualizarGamificacao() {
+            const xpTotal = parseInt("{{ user.xp }}");
+            const xpPorNivel = 1000;
+            const nivel = Math.floor(xpTotal / xpPorNivel) + 1;
+            const xpNoNivelAtual = xpTotal % xpPorNivel;
+            const porcentagem = (xpNoNivelAtual / xpPorNivel) * 100;
+            
+            // Atualiza Level e Barra
+            document.getElementById('lvl-txt').innerText = nivel;
+            document.getElementById('xp-bar').style.width = porcentagem + "%";
+            document.getElementById('xp-display').innerText = `${xpNoNivelAtual} / ${xpPorNivel} XP`;
+            document.getElementById('xp-remaining').innerText = xpPorNivel - xpNoNivelAtual;
+
+            // Atualiza Círculo de Progresso (Circunferência = 2 * PI * R)
+            const circle = document.getElementById('circle-progress');
+            const circumference = 2 * Math.PI * 66;
+            const offset = circumference - (porcentagem / 100 * circumference);
+            circle.style.strokeDashoffset = offset;
+        }
+
+        // Executa ao carregar
+        window.onload = atualizarGamificacao;
+
         async function abrirModalEdicao() {
+            // ... (mesma lógica do seu SweetAlert, o design já herda do seu CSS global)
             const { value: formValues } = await Swal.fire({
                 title: 'Ajustes de Perfil',
-                background: '#162a44',
+                background: '#0d1a2b',
                 color: '#fff',
                 html:
-                    `<input id="swal-name" class="swal2-input" placeholder="Nome Completo" value="{{ user.name }}">` +
-                    `<input id="swal-email" class="swal2-input" placeholder="Novo E-mail" value="{{ user.email }}">` +
-                    `<input id="swal-pass" type="password" class="swal2-input" placeholder="Nova Senha (opcional)">` +
-                    `<input id="swal-curr-pass" type="password" class="swal2-input" placeholder="Senha Atual (obrigatório)">`,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: 'Salvar Alterações',
-                cancelButtonText: 'Cancelar',
-                confirmButtonColor: '#d4e117',
-                buttonsStyling: true,
+                    `<input id="swal-name" class="swal2-input" placeholder="Nome" value="{{ user.name }}">` +
+                    `<input id="swal-email" class="swal2-input" placeholder="E-mail" value="{{ user.email }}">` +
+                    `<input id="swal-pass" type="password" class="swal2-input" placeholder="Nova Senha">` +
+                    `<input id="swal-curr-pass" type="password" class="swal2-input" placeholder="Senha Atual (Necessária)">`,
+                confirmButtonText: 'SALVAR',
+                confirmButtonColor: '#009ce0',
                 preConfirm: () => {
                     return {
                         name: document.getElementById('swal-name').value,
@@ -333,32 +299,24 @@
 
             if (formValues) {
                 if (!formValues.current_password) {
-                    Swal.fire('Erro', 'Senha atual é necessária para salvar.', 'error');
+                    Swal.fire('Atenção', 'Você precisa informar a senha atual.', 'warning');
                     return;
                 }
-
+                // Fetch post (mesmo código que você já tinha)
                 try {
                     const response = await fetch('/api/perfil/atualizar', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formValues)
                     });
-
                     const result = await response.json();
-
                     if (result.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Sucesso!',
-                            text: result.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => location.reload());
+                        Swal.fire('Sucesso!', result.message, 'success').then(() => location.reload());
                     } else {
-                        Swal.fire('Falha', result.message, 'error');
+                        Swal.fire('Erro', result.message, 'error');
                     }
-                } catch (error) {
-                    Swal.fire('Erro', 'Não foi possível conectar ao servidor.', 'error');
+                } catch (e) {
+                    Swal.fire('Erro', 'Falha na conexão.', 'error');
                 }
             }
         }
