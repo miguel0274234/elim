@@ -5,29 +5,26 @@
     <title>Explorar Aulas | ITEL ELIM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Identidade Visual ITEL ELIM */
-            --bg-deep: #0d1a2b;       /* Azul Profundo */
-            --bg-card: rgba(22, 42, 68, 0.6);
-            --secondary: #009ce0;     /* Azul Ciano */
-            --primary: #d4e117;       /* Amarelo Limão */
-            --texto-prio: #f8fafc;
-            --texto-sec: #94a3b8;
-            --borda: rgba(255, 255, 255, 0.08);
-            --glass: rgba(13, 26, 43, 0.7);
+            --azul-escuro: #020617;    
+            --azul-medio: #0f172a;
+            --azul-claro: #3da9e2;     
+            --dourado: #d4af37;       
+            --texto-cor: #94a3b8;
+            --glass: rgba(30, 41, 59, 0.4);
+            --borda-glass: rgba(255, 255, 255, 0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-deep);
-            color: var(--texto-sec);
+            background-color: var(--azul-escuro);
+            background-image: radial-gradient(circle at 100% 0%, rgba(61, 169, 226, 0.08) 0%, transparent 35%);
+            color: #fff;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 100% 0%, rgba(0, 156, 224, 0.08) 0%, transparent 40%);
         }
 
         /* --- NAVBAR --- */
@@ -36,197 +33,159 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 8%;
-            background: rgba(13, 26, 43, 0.9);
+            background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--borda);
+            border-bottom: 1px solid var(--borda-glass);
             position: sticky;
-            top: 0; z-index: 1000;
+            top: 0;
+            z-index: 1000;
         }
 
-        .logo-container { 
-            font-weight: 800; color: #fff; text-decoration: none; 
-            font-size: 1.1rem; letter-spacing: -0.5px; text-transform: uppercase;
-        }
+        .logo-container { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; }
         
         .nav-actions { display: flex; align-items: center; gap: 15px; }
         .nav-link { 
-            text-decoration: none; color: var(--texto-sec); font-size: 0.85rem; font-weight: 700;
-            padding: 10px 18px; border-radius: 12px; transition: 0.3s;
+            text-decoration: none; color: var(--texto-cor); font-size: 0.9rem; font-weight: 600;
+            padding: 8px 12px; border-radius: 8px; transition: 0.3s;
         }
         .nav-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
 
-        /* --- BARRA DE FILTROS --- */
-        .filter-section { padding: 40px 8% 20px; }
-        
+        /* --- FILTROS --- */
         .filter-bar {
+            padding: 40px 8% 20px;
             display: flex;
-            gap: 12px;
+            gap: 15px;
             overflow-x: auto;
-            padding-bottom: 10px;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
-        .filter-bar::-webkit-scrollbar { display: none; } /* Chrome/Safari */
-
         .filter-btn {
-            padding: 12px 24px;
-            border-radius: 100px;
-            background: var(--bg-card);
-            border: 1px solid var(--borda);
-            color: var(--texto-sec);
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: var(--azul-medio);
+            border: 1px solid var(--borda-glass);
+            color: var(--texto-cor);
             text-decoration: none;
             white-space: nowrap;
-            font-size: 0.8rem;
-            font-weight: 700;
-            transition: 0.3s;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
-        .filter-btn:hover { border-color: var(--secondary); color: #fff; }
         .filter-btn.active {
-            background: var(--secondary);
-            color: #fff;
-            border-color: var(--secondary);
-            box-shadow: 0 10px 20px rgba(0, 156, 224, 0.2);
+            background: var(--azul-claro);
+            color: var(--azul-escuro);
+            border-color: var(--azul-claro);
         }
 
         /* --- GRID DE AULAS --- */
-        .main-content { padding: 20px 8% 80px; }
+        .main-content { padding: 20px 8% 60px; }
         
         .grid-aulas {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
 
         .aula-card {
             background: var(--glass);
-            border: 1px solid var(--borda);
-            border-radius: 24px;
+            border: 1px solid var(--borda-glass);
+            border-radius: 20px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: transform 0.3s ease, border-color 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .aula-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--secondary);
-            background: rgba(22, 42, 68, 0.8);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            transform: translateY(-5px);
+            border-color: var(--azul-claro);
+            background: rgba(30, 41, 59, 0.7);
         }
 
         .thumbnail-area {
             width: 100%;
-            height: 190px;
+            height: 180px;
             background: #000;
             position: relative;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .thumbnail-area img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.7;
-            transition: 0.5s;
-        }
-        .aula-card:hover .thumbnail-area img { transform: scale(1.1); opacity: 0.5; }
-
-        .play-overlay {
-            position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle, rgba(0, 156, 224, 0.2) 0%, transparent 70%);
-            opacity: 0; transition: 0.3s;
-        }
-        .aula-card:hover .play-overlay { opacity: 1; }
-        
-        .play-btn-circle {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: var(--secondary); color: #fff;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; box-shadow: 0 0 20px var(--secondary);
+            opacity: 0.6;
         }
 
-        .aula-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        .play-icon {
+            position: absolute;
+            font-size: 3rem;
+            color: #fff;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .aula-card:hover .play-icon { transform: scale(1.2); color: var(--azul-claro); opacity: 1; }
+
+        .aula-info { padding: 20px; flex-grow: 1; }
         
         .aula-tag {
             font-size: 0.65rem;
             font-weight: 800;
             text-transform: uppercase;
-            color: var(--primary);
-            letter-spacing: 1px;
-            margin-bottom: 12px;
+            color: var(--azul-claro);
+            margin-bottom: 8px;
             display: block;
         }
 
         .aula-titulo {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             line-height: 1.4;
         }
 
         .aula-desc {
-            font-size: 0.9rem;
-            color: var(--texto-sec);
-            margin-bottom: 25px;
-            line-height: 1.6;
+            font-size: 0.85rem;
+            color: var(--texto-cor);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
         .aula-footer {
-            margin-top: auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 20px;
-            border-top: 1px solid var(--borda);
+            padding-top: 15px;
+            border-top: 1px solid var(--borda-glass);
         }
 
-        .meta-item { 
-            font-size: 0.75rem; 
-            color: var(--texto-sec); 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-            font-weight: 600;
-        }
+        .meta-item { font-size: 0.75rem; color: var(--texto-cor); display: flex; align-items: center; gap: 5px; }
 
         .btn-assistir {
             text-decoration: none;
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 12px;
+            background: var(--azul-claro);
+            color: var(--azul-escuro);
+            padding: 8px 15px;
+            border-radius: 10px;
             font-weight: 700;
-            font-size: 0.75rem;
-            transition: 0.3s;
-            border: 1px solid var(--borda);
-        }
-        .aula-card:hover .btn-assistir {
-            background: var(--primary);
-            color: var(--bg-deep);
-            border-color: var(--primary);
+            font-size: 0.8rem;
         }
 
-        /* Estilos de Lista Vazia */
         .empty-state {
-            grid-column: 1 / -1;
             text-align: center;
-            padding: 100px 20px;
-            background: var(--bg-card);
-            border-radius: 32px;
-            border: 2px dashed var(--borda);
+            padding: 100px 0;
+            grid-column: 1 / -1;
         }
-        .empty-state i { font-size: 3.5rem; color: var(--secondary); opacity: 0.2; margin-bottom: 20px; }
+
+        .empty-state i { font-size: 4rem; color: var(--azul-medio); margin-bottom: 20px; }
 
         @media (max-width: 768px) {
             header { padding: 15px 5%; }
-            .filter-section { padding: 30px 5% 10px; }
-            .main-content { padding: 10px 5% 60px; }
             .grid-aulas { grid-template-columns: 1fr; }
         }
     </style>
@@ -234,38 +193,29 @@
 <body>
 
     <header>
-        <a href="{{ url_for('dashboard') }}" class="logo-container">ITEL ELIM</a>
+        <div class="logo-container">ITEL ELIM</div>
         <div class="nav-actions">
-            <a href="{{ url_for('dashboard') }}" class="nav-link">Início</a>
-            {% if current_user.role in ['admin', 'professor'] %}
-            <a href="{{ url_for('upload') }}" class="nav-link" style="color: var(--primary)">
-                <i class="fa-solid fa-circle-plus"></i> Publicar
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('upload') }}" class="nav-link" style="color: var(--dourado)">
+                <i class="fa-solid fa-plus"></i> Nova Aula
             </a>
-            {% endif %}
         </div>
     </header>
 
-    <section class="filter-section">
-        <div class="filter-bar">
-            <a href="{{ url_for('lista_aulas') }}" class="filter-btn {{ 'active' if not request.args.get('cat') else '' }}">Todas as Aulas</a>
-            <a href="{{ url_for('lista_aulas', cat='Teologia') }}" class="filter-btn {{ 'active' if request.args.get('cat') == 'Teologia' else '' }}">Teologia</a>
-            <a href="{{ url_for('lista_aulas', cat='Liderança') }}" class="filter-btn {{ 'active' if request.args.get('cat') == 'Liderança' else '' }}">Liderança</a>
-            <a href="{{ url_for('lista_aulas', cat='História') }}" class="filter-btn {{ 'active' if request.args.get('cat') == 'História' else '' }}">História</a>
-            <a href="{{ url_for('lista_aulas', cat='Prática') }}" class="filter-btn {{ 'active' if request.args.get('cat') == 'Prática' else '' }}">Teologia Prática</a>
-        </div>
-    </section>
+    <nav class="filter-bar">
+        <a href="{{ url_for('lista_aulas') }}" class="filter-btn {{ 'active' if not request.args.get('cat') else '' }}">Todos os Módulos</a>
+        <a href="{{ url_for('lista_aulas', cat='Teologia') }}" class="filter-btn {{ 'active' if request.args.get('cat') == 'Teologia' else '' }}">Teologia</a>
+        <a href="{{ url_for('lista_aulas', cat='Liderança') }}" class="filter-btn {{ 'active' if request.args.get('cat') == 'Liderança' else '' }}">Liderança</a>
+        <a href="{{ url_for('lista_aulas', cat='História') }}" class="filter-btn {{ 'active' if request.args.get('cat') == 'História' else '' }}">História</a>
+    </nav>
 
     <main class="main-content">
         <div class="grid-aulas">
             {% for aula in aulas %}
             <div class="aula-card">
                 <div class="thumbnail-area">
-                    <img src="https://img.youtube.com/vi/{{ aula.url_video }}/maxresdefault.jpg" alt="Thumbnail">
-                    <div class="play-overlay">
-                        <div class="play-btn-circle">
-                            <i class="fa-solid fa-play"></i>
-                        </div>
-                    </div>
+                    <img src="https://img.youtube.com/vi/{{ aula.url_video }}/mqdefault.jpg" alt="Thumbnail">
+                    <i class="fa-solid fa-circle-play play-icon"></i>
                 </div>
                 
                 <div class="aula-info">
@@ -276,17 +226,17 @@
                     <div class="aula-footer">
                         <div class="meta-item">
                             <i class="fa-regular fa-clock"></i>
-                            {{ aula.minutos_estimados }} minutos
+                            {{ aula.minutos_estimados }} min
                         </div>
-                        <a href="/aula/{{ aula.slug }}" class="btn-assistir">ACESSAR</a>
+                        <a href="/aula/{{ aula.slug }}" class="btn-assistir">Assistir Agora</a>
                     </div>
                 </div>
             </div>
             {% else %}
             <div class="empty-state">
-                <i class="fa-solid fa-layer-group"></i>
-                <h3 style="color: #fff; margin-bottom: 10px;">Biblioteca em construção</h3>
-                <p>Não encontramos conteúdos nesta categoria por enquanto.</p>
+                <i class="fa-solid fa-book-open"></i>
+                <h3>Nenhuma aula encontrada</h3>
+                <p style="color: var(--texto-cor)">Aguarde o administrador publicar novos conteúdos.</p>
             </div>
             {% endfor %}
         </div>

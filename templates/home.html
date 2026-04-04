@@ -2,171 +2,163 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard | ITEL ELIM</title>
+    <title>Portal Acadêmico | ITEL ELIM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Identidade Visual ITEL ELIM */
-            --bg-deep: #0d1a2b;       /* Azul Profundo */
-            --bg-card: rgba(22, 42, 68, 0.6);
-            --secondary: #009ce0;     /* Azul Ciano */
-            --primary: #d4e117;       /* Amarelo Limão */
+            --bg-deep: #0a111a;
+            --bg-card: rgba(16, 28, 45, 0.6);
+            --secondary: #009ce0; 
+            --primary: #d4e117; 
             --texto-prio: #f8fafc;
             --texto-sec: #94a3b8;
             --borda: rgba(255, 255, 255, 0.08);
+            --accent-glass: rgba(0, 156, 224, 0.1);
         }
 
+        /* Reset e Base */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-deep);
             color: var(--texto-sec);
-            overflow-x: hidden;
-            line-height: 1.6;
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(0, 156, 224, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 0% 0%, rgba(0, 156, 224, 0.1) 0%, transparent 40%),
                 radial-gradient(circle at 100% 100%, rgba(212, 225, 23, 0.05) 0%, transparent 40%);
             min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        /* Scrollbar Personalizada */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        /* Animações */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
+        .animate-in {
+            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 8%;
-            background: rgba(13, 26, 43, 0.85);
+            background: rgba(10, 17, 26, 0.85);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--borda);
-            position: sticky;
-            top: 0; z-index: 1000;
+            position: sticky; top: 0; z-index: 1000;
         }
 
         .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-img { height: 35px; color: var(--secondary); font-size: 1.5rem; transition: 0.3s; }
-        .logo-container:hover .logo-img { transform: scale(1.1); color: var(--primary); }
-        
-        .brand-text {
-            font-weight: 800; color: #fff; font-size: 1.1rem; 
-            letter-spacing: -0.5px; text-transform: uppercase;
-        }
+        .logo-img { color: var(--primary); font-size: 1.6rem; }
+        .brand-text { font-weight: 800; color: #fff; font-size: 1.1rem; letter-spacing: 0.5px; }
+        .brand-subtext { font-size: 0.6rem; color: var(--secondary); display: block; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; }
 
-        /* Area do Perfil */
-        .user-actions { display: flex; align-items: center; gap: 20px; }
+        /* Ações do Usuário */
+        .user-actions { display: flex; align-items: center; gap: 15px; }
         
-        .btn-icon {
-            color: var(--texto-sec); text-decoration: none; font-size: 1.1rem;
-            transition: 0.3s;
-        }
-        .btn-icon:hover { color: var(--secondary); }
-
         .profile-btn {
-            width: 42px; height: 42px; border-radius: 14px;
+            width: 40px; height: 40px; border-radius: 12px;
             background: linear-gradient(135deg, var(--secondary), var(--primary));
             display: flex; align-items: center; justify-content: center;
             color: var(--bg-deep); font-weight: 800; cursor: pointer;
-            border: 2px solid rgba(255,255,255,0.1); transition: 0.3s;
+            transition: 0.3s; border: none;
         }
-        .profile-btn:hover { transform: rotate(5deg); }
 
-        /* Menu Dropdown */
+        .btn-icon { color: var(--texto-sec); text-decoration: none; font-size: 1.2rem; transition: 0.3s; }
+        .btn-icon:hover { color: var(--primary); }
+
+        /* Dropdown */
         .dropdown {
-            position: absolute; top: 65px; right: 0; width: 280px;
-            background: #162a44; border: 1px solid var(--borda);
-            border-radius: 24px; padding: 15px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: absolute; top: 55px; right: 0; width: 260px;
+            background: #111e2f; border: 1px solid var(--borda);
+            border-radius: 18px; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             opacity: 0; transform: translateY(10px); pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: 0.3s; z-index: 1100;
         }
         .dropdown.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
-        .dropdown-info { padding: 10px 15px 15px; border-bottom: 1px solid var(--borda); margin-bottom: 10px; }
-        .dropdown-info p { color: #fff; font-weight: 700; font-size: 0.95rem; }
-        .dropdown-info span { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
-
         .dropdown-link {
-            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            display: flex; align-items: center; gap: 10px; padding: 12px;
             color: var(--texto-sec); text-decoration: none; font-size: 0.85rem;
-            font-weight: 600; border-radius: 12px; transition: 0.2s;
+            border-radius: 10px; transition: 0.2s;
         }
         .dropdown-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .dropdown-link.logout { color: #f87171; border-top: 1px solid var(--borda); margin-top: 10px; border-radius: 0; }
 
-        /* Hero Section */
-        .hero { padding: 80px 8% 40px; text-align: center; }
-        .badge {
-            background: rgba(0, 156, 224, 0.1); color: var(--secondary);
-            padding: 8px 18px; border-radius: 100px; font-size: 0.75rem;
-            font-weight: 800; border: 1px solid rgba(0, 156, 224, 0.2);
-            margin-bottom: 24px; display: inline-block; text-transform: uppercase;
+        /* Filtros */
+        .theology-filters {
+            display: flex; gap: 10px; padding: 20px 8%;
+            overflow-x: auto; scrollbar-width: none;
         }
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; color: #fff;
-            letter-spacing: -1.5px; line-height: 1.2; margin-bottom: 20px;
+        .theology-filters::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            background: var(--bg-card); border: 1px solid var(--borda);
+            padding: 8px 18px; border-radius: 100px; color: var(--texto-prio);
+            text-decoration: none; font-size: 0.75rem; font-weight: 600;
+            white-space: nowrap; transition: 0.3s; display: flex; align-items: center; gap: 6px;
         }
+        .filter-btn:hover { border-color: var(--secondary); }
+        .filter-btn.active { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+
+        /* Hero */
+        .hero { padding: 40px 8% 20px; }
+        .hero h1 { font-size: 2.5rem; color: #fff; margin-bottom: 10px; font-weight: 800; }
         .hero h1 span { color: var(--primary); }
+        .badge { 
+            display: inline-block; padding: 5px 12px; background: var(--accent-glass);
+            border-radius: 6px; color: var(--secondary); font-size: 0.7rem; font-weight: 700; margin-bottom: 15px;
+        }
 
-        /* Bento Grid Layout */
+        /* Grid de Aulas */
         .bento-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px; padding-bottom: 80px;
+            gap: 20px; padding: 20px 8% 60px;
         }
 
         .bento-card {
             background: var(--bg-card); border: 1px solid var(--borda);
-            border-radius: 30px; padding: 35px; text-decoration: none;
-            position: relative; overflow: hidden; display: flex; flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 24px; padding: 25px; text-decoration: none;
+            display: flex; flex-direction: column; transition: 0.4s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
-        
         .bento-card:hover {
-            transform: translateY(-10px); border-color: var(--secondary);
-            background: rgba(22, 42, 68, 0.9);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(-8px); border-color: var(--secondary);
+            background: rgba(16, 28, 45, 0.9);
         }
 
         .category-tag {
-            font-size: 0.65rem; font-weight: 800; color: var(--primary);
-            background: rgba(212, 225, 23, 0.1); padding: 5px 12px;
-            border-radius: 8px; width: fit-content; margin-bottom: 20px;
-            text-transform: uppercase;
+            font-size: 0.6rem; font-weight: 800; color: var(--primary);
+            background: rgba(212, 225, 23, 0.1); padding: 4px 10px;
+            border-radius: 6px; margin-bottom: 15px; width: fit-content; text-transform: uppercase;
         }
 
-        .bento-card h3 { color: #fff; font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; }
-        .bento-card p { font-size: 0.95rem; color: var(--texto-sec); line-height: 1.6; }
+        .bento-card h3 { color: #fff; font-size: 1.2rem; margin-bottom: 10px; }
+        .bento-card p { font-size: 0.85rem; color: var(--texto-sec); line-height: 1.5; margin-bottom: 20px; }
 
         .card-footer {
-            margin-top: auto; padding-top: 30px; display: flex;
-            justify-content: space-between; align-items: center;
+            margin-top: auto; padding-top: 15px; border-top: 1px solid var(--borda);
+            display: flex; justify-content: space-between; align-items: center;
         }
-        
-        .btn-label { font-size: 0.75rem; font-weight: 800; color: #fff; letter-spacing: 1px; }
 
-        .go-btn {
-            width: 44px; height: 44px; border-radius: 12px;
-            background: rgba(255,255,255,0.05); color: #fff; display: flex;
-            align-items: center; justify-content: center; transition: 0.3s;
+        .xp-badge { font-size: 0.75rem; font-weight: 800; color: var(--primary); }
+        .go-btn { 
+            width: 35px; height: 35px; background: var(--secondary); 
+            border-radius: 10px; color: #fff; display: flex; align-items: center; justify-content: center;
         }
-        .bento-card:hover .go-btn { background: var(--secondary); color: #fff; transform: translateX(5px); }
-
-        /* Animações */
-        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         @media (max-width: 768px) {
             header { padding: 15px 5%; }
-            .hero { padding: 60px 5%; }
-            .brand-text { font-size: 0.9rem; }
-            .bento-grid { grid-template-columns: 1fr; }
+            .hero { padding: 30px 5%; }
+            .bento-grid { padding: 10px 5% 40px; grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -174,13 +166,16 @@
 
     <header>
         <a href="{{ url_for('dashboard') }}" class="logo-container">
-            <i class="fa-solid fa-feather-alt logo-img"></i>
-            <span class="brand-text">ITEL ELIM</span>
+            <i class="fa-solid fa-scroll logo-img"></i>
+            <div>
+                <span class="brand-text">ITEL ELIM</span>
+                <span class="brand-subtext">Instituto Teológico</span>
+            </div>
         </a>
 
         <div class="user-actions">
-            <a href="{{ url_for('lista_aulas') }}" class="btn-icon" title="Biblioteca de Aulas">
-                <i class="fa-solid fa-book-open"></i>
+            <a href="{{ url_for('lista_aulas') }}" class="btn-icon">
+                <i class="fa-solid fa-book-bible"></i>
             </a>
             
             <div style="position: relative;">
@@ -189,72 +184,59 @@
                 </div>
                 
                 <div class="dropdown" id="profileMenu">
-                    <div class="dropdown-info">
-                        <p>{{ current_user.name }}</p>
-                        <span>{{ current_user.role }}</span>
+                    <div style="padding: 10px; border-bottom: 1px solid var(--borda);">
+                        <p style="color: #fff; font-size: 0.9rem; font-weight: 700;">{{ current_user.name }}</p>
+                        <p style="font-size: 0.7rem; color: var(--primary);">{{ current_user.role | upper }}</p>
                     </div>
-                    
-                    <a href="{{ url_for('perfil') }}" class="dropdown-link">
-                        <i class="fa-solid fa-user-gear"></i> Configurações de Perfil
-                    </a>
-                    
+                    <a href="{{ url_for('perfil') }}" class="dropdown-link"><i class="fa-solid fa-user-shield"></i> Perfil</a>
                     {% if current_user.role in ['admin', 'professor'] %}
-                    <a href="{{ url_for('upload') }}" class="dropdown-link">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Novo Estudo
-                    </a>
+                    <a href="{{ url_for('upload') }}" class="dropdown-link"><i class="fa-solid fa-plus"></i> Novo Estudo</a>
                     {% endif %}
-
-                    {% if current_user.role == 'admin' %}
-                    <a href="{{ url_for('gerenciar_usuarios') }}" class="dropdown-link">
-                        <i class="fa-solid fa-users-gear"></i> Gestão de Usuários
-                    </a>
-                    {% endif %}
-
-                    <a href="{{ url_for('logout') }}" class="dropdown-link logout">
-                        <i class="fa-solid fa-power-off"></i> Encerrar Sessão
-                    </a>
+                    <a href="{{ url_for('logout') }}" class="dropdown-link" style="color: #f87171;"><i class="fa-solid fa-power-off"></i> Sair</a>
                 </div>
             </div>
         </div>
     </header>
 
-    <main style="max-width: 1400px; margin: 0 auto; padding: 0 5%;">
+    <main>
         <section class="hero animate-in">
-            <span class="badge">Painel de Controle v8.0</span>
-            <h1>Domine o <span>Conhecimento</span> Acadêmico.</h1>
-            <p style="max-width: 650px; margin: 0 auto; color: var(--texto-sec);">
-                Bem-vindo ao seu centro de inteligência ITEL ELIM. Aqui você gerencia seus estudos, acessa materiais exclusivos e acompanha sua evolução na plataforma.
-            </p>
+            <div class="badge">ESTUDO BÍBLICO AVANÇADO</div>
+            <h1>Formação Teológica <span>Digital</span></h1>
+            <p>Explore o conhecimento bíblico com profundidade e clareza.</p>
         </section>
 
-        <div class="bento-grid animate-in" style="animation-delay: 0.2s;">
+        <nav class="theology-filters animate-in" style="animation-delay: 0.1s;">
+            <a href="#" class="filter-btn active">Todos</a>
+            <a href="#" class="filter-btn">Teologia</a>
+            <a href="#" class="filter-btn">Exegese</a>
+            <a href="#" class="filter-btn">História</a>
+            <a href="#" class="filter-btn">Mestres</a>
+        </nav>
+
+        <div class="bento-grid">
             {% if aulas %}
                 {% for aula in aulas %}
-                <a href="{{ url_for('ver_aula', slug=aula.slug) }}" class="bento-card">
+                <a href="{{ url_for('ver_aula', slug=aula.slug) }}" class="bento-card animate-in">
                     <span class="category-tag">{{ aula.categoria }}</span>
                     <h3>{{ aula.titulo }}</h3>
-                    <p>{{ aula.descricao[:100] }}...</p>
+                    <p>{{ aula.descricao[:110] if aula.descricao else 'Acesse este conteúdo para iniciar seu aprendizado teológico hoje.' }}...</p>
                     
                     <div class="card-footer">
-                        <span class="btn-label">ABRIR MATERIAL</span>
-                        <div class="go-btn">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </div>
+                        <span class="xp-badge"><i class="fa-solid fa-bolt"></i> +{{ aula.xp_recompensa }} XP</span>
+                        <div class="go-btn"><i class="fa-solid fa-play"></i></div>
                     </div>
                 </a>
                 {% endfor %}
             {% else %}
-                <div style="grid-column: 1/-1; text-align: center; padding: 100px 20px; background: var(--bg-card); border-radius: 40px; border: 2px dashed var(--borda);">
-                    <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--secondary); opacity: 0.3; margin-bottom: 20px; display: block;"></i>
-                    <h3 style="color: #fff;">Nenhum conteúdo disponível</h3>
-                    <p>Fique atento! Novos estudos serão publicados em breve por seus professores.</p>
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: var(--bg-card); border-radius: 24px; border: 1px dashed var(--borda);">
+                    <p>Nenhum estudo disponível no momento.</p>
                 </div>
             {% endif %}
         </div>
     </main>
 
     <script>
-        // Lógica do Menu Dropdown
+        // Menu Dropdown
         const trigger = document.getElementById('profileTrigger');
         const menu = document.getElementById('profileMenu');
 
@@ -263,17 +245,9 @@
             menu.classList.toggle('active');
         });
 
-        document.addEventListener('click', (e) => {
-            if (!menu.contains(e.target) && !trigger.contains(e.target)) {
-                menu.classList.remove('active');
-            }
-        });
+        document.addEventListener('click', () => menu.classList.remove('active'));
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') menu.classList.remove('active');
-        });
-
-        // Efeito de Cascata nos Cards
+        // Delay dinâmico para animação dos cards
         document.querySelectorAll('.bento-card').forEach((card, index) => {
             card.style.animationDelay = `${0.1 * index}s`;
         });

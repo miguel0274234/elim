@@ -155,14 +155,17 @@ def index():
 @app.route("/dashboard")
 @login_required
 def dashboard():
+    # Buscamos as 6 aulas mais recentes para exibir no grid do dashboard
+    aulas_recentes = Aula.query.filter_by(status="publicado").order_by(Aula.data_criacao.desc()).limit(6).all()
+    
     stats = {
-        "aulas_count": db.session.query(Aula).count(),
+        "aulas_count": Aula.query.count(),
         "meu_progresso": current_user.progresso.filter_by(concluido=True).count(),
         "xp": current_user.xp,
-        "atividades": LogAtividade.query.filter_by(user_id=current_user.id).order_by(LogAtividade.timestamp.desc()).limit(8).all()
+        "atividades": LogAtividade.query.filter_by(user_id=current_user.id).order_by(LogAtividade.timestamp.desc()).limit(8).all(),
+        "aulas": aulas_recentes  # <-- ESSA LINHA É CRUCIAL
     }
     return render_template("home.html", **stats)
-
 @app.route("/aulas")
 @login_required
 def lista_aulas():
@@ -368,39 +371,43 @@ def api_atualizar_perfil():
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
 
-# --- SETUP INICIAL (CORRIGIDO E LIMPO) ---
+# --- SETUP INICIAL ---
 
 def setup_initial_data():
-    # Cria todas as tabelas
+    with app.app_context():
+        db.create_all()
+        # Garante unidade padrão
+        if not db.session.query(Unidade).first():
+            
+            db.session.add(Unidade(nome="Campus Central", cidade="Luanda"))
+            db.session.commit()
+            
+        # Garante Admin Master
+        if not User.query.filter_by(role="admin").first():
+            admin = User(name="Gestor Quantum", email="master@elim.edu", role="admin", is_approved=True, unidade_id=1)
+            admin.set_password("elim@2026")
+            db.session.add(admin)
+            db.session.commit()
+            print(">>> [SISTEMA] Admin Master configurado: master@elim.edu / elim@2026")
+def setup():
     db.create_all()
 
-    # Cria unidade padrão se não existir
     if not Unidade.query.first():
-        unidade = Unidade(nome="Campus Central", cidade="Luanda")
-        db.session.add(unidade)
+        db.session.add(Unidade(nome="Campus Central", cidade="SP"))
         db.session.commit()
-        print(">>> [SISTEMA] Unidade padrão criada")
 
-    # Cria admin master se não existir
     if not User.query.filter_by(email="master@elim.edu").first():
         admin = User(
-            name="Gestor Quantum",
+            name="Admin",
             email="master@elim.edu",
             role="admin",
             is_approved=True,
             unidade_id=1
         )
-        admin.set_password("elim@2026")
+        admin.set_password("123456")
         db.session.add(admin)
         db.session.commit()
-        print(">>> [SISTEMA] Admin criado: master@elim.edu / elim@2026")
-
-
-# 👇 ISSO GARANTE QUE RODA NO RENDER
 with app.app_context():
-    setup_initial_data()
-
-
-# --- RUN LOCAL ---
+    setup()
 if __name__ == "__main__":
     app.run(debug=True)
