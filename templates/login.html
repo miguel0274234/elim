@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docente | Elim Management</title>
+    <title>Login | Elim</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -173,14 +173,14 @@
 
     <div class="prof-container">
         <main class="prof-card">
-            <span class="status-badge">Docente</span>
+            <span class="status-badge">Login</span>
             
             <header class="header-section">
                 <div class="icon-box">
                     <i class="fas fa-graduation-cap"></i>
                 </div>
-                <h2>Acesso Mestre</h2>
-                <p class="subtitle">ELIM MANAGEMENT SYSTEM</p>
+                <h2>Login Elim ITEL</h2>
+                <p class="subtitle"></p>
             </header>
 
             <form id="loginForm">
@@ -201,8 +201,8 @@
             </form>
 
             <div style="text-align: center;">
-                <a href="/login-estudante" class="link-back">
-                    <i class="fas fa-arrow-left"></i> Voltar ao Portal Estudantil
+                <a href="/register" class="link-back">
+                    <i class="fas fa-arrow-left"></i> Registro
                 </a>
             </div>
         </main>
@@ -229,9 +229,7 @@
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    if (result.role !== 'docente' && result.role !== 'admin' && result.role !== 'professor') {
-                        throw new Error('Acesso exclusivo para nível docente.');
-                    }
+                    
 
                     Swal.fire({
                         icon: 'success',

@@ -164,39 +164,245 @@
 </head>
 <body>
 
-    <header>
-        <a href="{{ url_for('dashboard') }}" class="logo-container">
-            <i class="fa-solid fa-scroll logo-img"></i>
-            <div>
-                <span class="brand-text">ITEL ELIM</span>
-                <span class="brand-subtext">Instituto Teológico</span>
-            </div>
-        </a>
+    <header class="main-header">
+    <a href="{{ url_for('dashboard') }}" class="logo-container">
+        <div class="logo-glow">
+            <img src="scr/WhatsApp_Image_2026-04-05_at_14.09.44-removebg-preview.png" alt="logo" class="brand-img">
+        </div>
+        <div class="brand-info">
+            <span class="brand-text">ITEL ELIM</span>
+            <span class="brand-subtext">Instituto Teológico</span>
+        </div>
+    </a>
 
-        <div class="user-actions">
-            <a href="{{ url_for('lista_aulas') }}" class="btn-icon">
-                <i class="fa-solid fa-book-bible"></i>
-            </a>
+    <div class="user-actions">
+        <a href="{{ url_for('lista_aulas') }}" class="action-btn" title="Biblioteca de Estudos">
+            <i class="fa-solid fa-book-bible"></i>
+        </a>
+        
+        <div class="profile-wrapper">
+            <button class="profile-trigger" id="profileTrigger">
+                <div class="avatar-ring">
+                    <span>{{ current_user.name[0] | upper if current_user.is_authenticated else '?' }}</span>
+                </div>
+            </button>
             
-            <div style="position: relative;">
-                <div class="profile-btn" id="profileTrigger">
-                    {{ current_user.name[0] | upper if current_user.is_authenticated else '?' }}
+            <div class="dropdown-menu" id="profileMenu">
+                <div class="dropdown-header">
+                    <span class="user-name">{{ current_user.name }}</span>
+                    <span class="user-role">{{ current_user.role | upper }}</span>
                 </div>
                 
-                <div class="dropdown" id="profileMenu">
-                    <div style="padding: 10px; border-bottom: 1px solid var(--borda);">
-                        <p style="color: #fff; font-size: 0.9rem; font-weight: 700;">{{ current_user.name }}</p>
-                        <p style="font-size: 0.7rem; color: var(--primary);">{{ current_user.role | upper }}</p>
-                    </div>
-                    <a href="{{ url_for('perfil') }}" class="dropdown-link"><i class="fa-solid fa-user-shield"></i> Perfil</a>
+                <div class="dropdown-body">
+                    <a href="{{ url_for('perfil') }}" class="dropdown-item">
+                        <i class="fa-solid fa-user-shield"></i> Perfil
+                    </a>
+                    
                     {% if current_user.role in ['admin', 'professor'] %}
-                    <a href="{{ url_for('upload') }}" class="dropdown-link"><i class="fa-solid fa-plus"></i> Novo Estudo</a>
+                    <a href="{{ url_for('upload') }}" class="dropdown-item">
+                        <i class="fa-solid fa-plus-circle"></i> Novo Estudo
+                    </a>
                     {% endif %}
-                    <a href="{{ url_for('logout') }}" class="dropdown-link" style="color: #f87171;"><i class="fa-solid fa-power-off"></i> Sair</a>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <a href="{{ url_for('logout') }}" class="dropdown-item logout">
+                        <i class="fa-solid fa-power-off"></i> Sair
+                    </a>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
+
+<style>
+    /* --- Estilização do Header Superior --- */
+    .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 8%;
+        height: 85px;
+        background: rgba(10, 17, 26, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* --- Logo & Branding --- */
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover { transform: translateY(-1px); }
+
+    .logo-glow {
+        position: relative;
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand-img {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+    }
+
+    .brand-info { display: flex; flex-direction: column; }
+
+    .brand-text {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 1.2rem;
+        letter-spacing: -0.5px;
+        line-height: 1;
+    }
+
+    .brand-subtext {
+        color: var(--secondary, #009ce0);
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 4px;
+    }
+
+    /* --- Botões de Ação --- */
+    .user-actions { display: flex; align-items: center; gap: 20px; }
+
+    .action-btn {
+        color: #94a3b8;
+        font-size: 1.2rem;
+        text-decoration: none;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid transparent;
+    }
+
+    .action-btn:hover {
+        color: var(--primary, #d4e117);
+        background: rgba(212, 225, 23, 0.05);
+        border-color: rgba(212, 225, 23, 0.2);
+        transform: translateY(-2px);
+    }
+
+    /* --- Avatar de Perfil --- */
+    .profile-trigger {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .avatar-ring {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #009ce0, #d4e117);
+        padding: 2px; /* Espessura da borda gradiente */
+        transition: transform 0.3s ease;
+    }
+
+    .avatar-ring span {
+        background: #0a111a;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.9rem;
+    }
+
+    .profile-trigger:hover .avatar-ring {
+        transform: rotate(5deg) scale(1.05);
+    }
+
+    /* --- Dropdown Premium --- */
+    .dropdown-menu {
+        position: absolute;
+        top: 65px;
+        right: 0;
+        width: 240px;
+        background: #111e2f;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transform: translateY(15px);
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        overflow: hidden;
+    }
+
+    .dropdown-menu.active {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .dropdown-header {
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .user-name { display: block; color: #fff; font-weight: 700; font-size: 0.95rem; }
+    .user-role { display: block; color: var(--primary, #d4e117); font-size: 0.7rem; font-weight: 800; margin-top: 3px; }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 20px;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .dropdown-item i { font-size: 1rem; width: 20px; text-align: center; }
+
+    .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        padding-left: 25px;
+    }
+
+    .dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.05); margin: 5px 0; }
+
+    .logout:hover { color: #f87171 !important; }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+        .main-header { padding: 0 5%; }
+        .mobile-hide { display: none; }
+        .brand-text { font-size: 1rem; }
+    }
+</style>
 
     <main>
         <section class="hero animate-in">
